@@ -72,7 +72,6 @@ export default function DashboardPage() {
     <Dashboard
       user={user}
       logout={handleLogout}
-      onCourseClick={(course) => console.log("Course:", course)}
       onStartQuiz={(lang) => console.log("Quiz lang:", lang)}
     />
   )
