@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { X, Eye, EyeOff } from "lucide-react";
 
-
+const API = `${process.env.NEXT_PUBLIC_API_URL}/api`
 export default function LoginModal({
   open,
   onClose,
@@ -16,7 +16,7 @@ export default function LoginModal({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const API = `${process.env.NEXT_PUBLIC_API_URL}/api`
+
 
   if (!open) return null;
 
@@ -31,7 +31,7 @@ export default function LoginModal({
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch(`${API}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim(), password }),
