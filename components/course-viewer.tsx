@@ -124,7 +124,7 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
         {pdfUrl ? (
           <iframe
             key={pdfUrl}
-            src={pdfUrl}
+            src={`${pdfUrl}#toolbar=0`}
             style={{ width: "100%", height: "78vh", border: "none", display: "block" }}
             title={`${course.title} - ${lang === "mn" ? "Монгол" : "English"}`}
           />

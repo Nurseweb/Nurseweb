@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { X, Eye, EyeOff } from "lucide-react";
 
+
 export default function LoginModal({
   open,
   onClose,
@@ -15,6 +16,7 @@ export default function LoginModal({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const API = `${process.env.NEXT_PUBLIC_API_URL}/api`
 
   if (!open) return null;
 
