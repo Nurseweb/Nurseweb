@@ -29,7 +29,7 @@ const mockUser = {
   email: "admin@medicare.com",
   role: "admin",
 };
-const mockCourses = Array.from({ length: 10 }, (_, i) => {
+const mockCourses = Array.from({ length: 11 }, (_, i) => {
   const n = i + 1;
   return {
     id: n,
