@@ -164,7 +164,9 @@ export default function Navbar({ onLoginClick }: NavbarProps) {
           <nav className="desktop-nav" style={{ display: "flex", alignItems: "center", gap: "32px" }}>
             <a href="#about" className="nav-link">Бидний тухай</a>
             <a href="#features" className="nav-link">Агуулга</a>
-            <a href="#contact" className="nav-link">Холбоо барих</a>
+            <a href="https://www.facebook.com/profile.php?id=61583464740599" className="nav-link" target="_blank" rel="noopener noreferrer">
+              Холбоо барих
+            </a>
 
             <div style={{ width: "1px", height: "18px", background: "#dce9ec" }} />
 

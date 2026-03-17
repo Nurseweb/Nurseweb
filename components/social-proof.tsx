@@ -74,15 +74,45 @@ export default function SocialProof() {
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap');
+
         .sp-point { transition: background 0.2s ease, padding-left 0.25s ease; border-radius: 10px; }
         .sp-point:not(:last-child) { border-bottom: 1px solid #e8f0f2; }
         .sp-point:hover { background: #f8fbfc; padding-left: 10px !important; }
         .sp-stat { transition: transform 0.2s, box-shadow 0.2s; }
         .sp-stat:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(14,116,144,0.1); }
+
+        /* ── TABLET (≤768px) ── */
+        @media (max-width: 768px) {
+          .sp-section {
+            padding: 72px 20px !important;
+          }
+          .sp-grid {
+            grid-template-columns: 1fr !important;
+            gap: 48px !important;
+          }
+          .sp-left {
+            position: static !important;
+            top: unset !important;
+          }
+        }
+
+        /* ── MOBILE (≤480px) ── */
+        @media (max-width: 480px) {
+          .sp-section {
+            padding: 56px 16px !important;
+          }
+          .sp-grid {
+            gap: 40px !important;
+          }
+          .sp-point {
+            padding: 24px 12px 24px 0 !important;
+          }
+        }
       `}</style>
 
       <div style={{ maxWidth: "1040px", margin: "0 auto" }}>
         <div
+          className="sp-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
@@ -90,8 +120,8 @@ export default function SocialProof() {
             alignItems: "start",
           }}
         >
-          {/* LEFT — sticky */}
-          <div ref={left.ref} style={{ position: "sticky", top: "120px" }}>
+          {/* LEFT — sticky on desktop, static on mobile */}
+          <div ref={left.ref} className="sp-left" style={{ position: "sticky", top: "120px" }}>
             <div style={anim(left.inView, 0, "left")}>
               <span
                 style={{
@@ -106,14 +136,7 @@ export default function SocialProof() {
                   marginBottom: "20px",
                 }}
               >
-                <span
-                  style={{
-                    display: "inline-block",
-                    width: "20px",
-                    height: "1px",
-                    background: "#0e7490",
-                  }}
-                />
+                <span style={{ display: "inline-block", width: "20px", height: "1px", background: "#0e7490" }} />
                 Яагаад биднийг сонгох вэ
               </span>
             </div>
@@ -157,23 +180,8 @@ export default function SocialProof() {
                 marginBottom: "24px",
               }}
             >
-              <div
-                style={{
-                  width: "36px",
-                  height: "1.5px",
-                  background: "linear-gradient(90deg, #0e7490, #22b8d1)",
-                  borderRadius: "2px",
-                }}
-              />
-              <div
-                style={{
-                  width: "5px",
-                  height: "5px",
-                  borderRadius: "50%",
-                  background: "#22b8d1",
-                  opacity: 0.6,
-                }}
-              />
+              <div style={{ width: "36px", height: "1.5px", background: "linear-gradient(90deg, #0e7490, #22b8d1)", borderRadius: "2px" }} />
+              <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#22b8d1", opacity: 0.6 }} />
             </div>
 
             <p
@@ -228,9 +236,7 @@ export default function SocialProof() {
                   >
                     {val}
                   </p>
-                  <p
-                    style={{ fontSize: "0.72rem", color: "#8aacb4", margin: 0 }}
-                  >
+                  <p style={{ fontSize: "0.72rem", color: "#8aacb4", margin: 0 }}>
                     {label}
                   </p>
                 </div>
@@ -250,13 +256,7 @@ export default function SocialProof() {
                   cursor: "default",
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "20px",
-                    alignItems: "flex-start",
-                  }}
-                >
+                <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
                   <span
                     style={{
                       fontFamily: "'Lora', Georgia, serif",
@@ -317,15 +317,13 @@ export default function SocialProof() {
                 ...anim(note.inView, 0.1, "up"),
                 marginTop: "20px",
                 padding: "22px 24px",
-                background:
-                  "linear-gradient(135deg, rgba(14,116,144,0.04) 0%, rgba(34,184,209,0.04) 100%)",
+                background: "linear-gradient(135deg, rgba(14,116,144,0.04) 0%, rgba(34,184,209,0.04) 100%)",
                 borderRadius: "12px",
                 border: "1px solid rgba(14,116,144,0.12)",
                 position: "relative",
                 overflow: "hidden",
               }}
             >
-              {/* Decorative quote mark */}
               <span
                 style={{
                   position: "absolute",

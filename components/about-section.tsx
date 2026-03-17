@@ -10,7 +10,6 @@ const features = [
   { icon: Award, title: "Батлагдсан үр дүн", description: "Зөвхөн шалгалт биш — олон улсын карьераа эхлүүлэхэд шаардлагатай сэтгэлгээ, мэргэжлийн чадвар." },
 ]
 
-// Custom hook: element viewport-д орох үед trigger хийнэ
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
@@ -29,7 +28,6 @@ function useInView(threshold = 0.15) {
   return { ref, inView }
 }
 
-// Animation style helper
 function anim(inView: boolean, delay = 0, direction: "up" | "left" | "right" | "scale" = "up"): React.CSSProperties {
   const transforms: Record<string, string> = {
     up: "translateY(32px)",
@@ -55,6 +53,7 @@ export default function AboutSection() {
     <section id="about" style={{ padding: "120px 24px", background: "#f8fafb", fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap');
+
         .feat-card { transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease; }
         .feat-card:hover { box-shadow: 0 12px 40px rgba(14,116,144,0.12); border-color: rgba(14,116,144,0.3) !important; transform: translateY(-4px); }
         .philosophy-line:not(:last-child) { border-bottom: 1px solid #e8f0f2; }
@@ -62,31 +61,132 @@ export default function AboutSection() {
         .stat-card:hover { box-shadow: 0 8px 28px rgba(14,116,144,0.1); transform: translateY(-2px); }
         @keyframes countUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
         .count-anim { animation: countUp 0.6s cubic-bezier(0.22,1,0.36,1) both; }
+
+        /* ── TABLET (≤768px) ── */
+        @media (max-width: 768px) {
+          #about {
+            padding: 72px 20px !important;
+          }
+          .about-sec1 {
+            grid-template-columns: 1fr !important;
+            gap: 48px !important;
+            margin-bottom: 64px !important;
+          }
+          .about-sec2 {
+            grid-template-columns: 1fr !important;
+            margin-bottom: 56px !important;
+          }
+          .about-sec3 {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+          }
+          .about-badge {
+            bottom: -16px !important;
+            right: 12px !important;
+          }
+          .about-stats {
+            gap: 12px !important;
+          }
+          .about-philosophy-left {
+            padding: 36px 28px !important;
+          }
+          .about-philosophy-right {
+            padding: 36px 28px !important;
+          }
+        }
+
+        /* ── MOBILE (≤480px) ── */
+        @media (max-width: 480px) {
+          #about {
+            padding: 56px 16px !important;
+          }
+          .about-sec1 {
+            gap: 40px !important;
+            margin-bottom: 48px !important;
+          }
+          .about-sec2 {
+            margin-bottom: 40px !important;
+            border-radius: 16px !important;
+          }
+          .about-sec3 {
+            grid-template-columns: 1fr !important;
+          }
+          .about-badge {
+            bottom: -14px !important;
+            right: 10px !important;
+            padding: 12px 16px !important;
+            min-width: 110px !important;
+          }
+          .about-badge-val {
+            font-size: 1.5rem !important;
+          }
+          .about-stats {
+            flex-direction: column !important;
+            gap: 10px !important;
+          }
+          .about-stat-card {
+            flex: unset !important;
+          }
+          .about-philosophy-left {
+            padding: 28px 20px !important;
+          }
+          .about-philosophy-right {
+            padding: 28px 20px !important;
+          }
+          .about-philosophy-right p:first-child {
+            margin-bottom: 20px !important;
+          }
+        }
       `}</style>
 
       <div style={{ maxWidth: "1060px", margin: "0 auto" }}>
 
         {/* ── Section 1: Image + Intro ── */}
-        <div ref={sec1.ref} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "72px", alignItems: "center", marginBottom: "96px" }}>
-
-          {/* Image — slides from left */}
+        <div
+          ref={sec1.ref}
+          className="about-sec1"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "72px",
+            alignItems: "center",
+            marginBottom: "96px",
+          }}
+        >
+          {/* Image */}
           <div style={{ ...anim(sec1.inView, 0, "left"), position: "relative" }}>
             <div style={{ borderRadius: "20px", overflow: "hidden", aspectRatio: "4/3", position: "relative", boxShadow: "0 24px 64px rgba(13,43,51,0.12)" }}>
-              <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80" alt="Nurse studying"
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              <img
+                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80"
+                alt="Nurse studying"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(14,116,144,0.08) 0%, transparent 60%)" }} />
-              {/* Corner accent */}
               <div style={{ position: "absolute", top: 0, left: 0, width: "32px", height: "32px", borderTop: "2px solid rgba(34,184,209,0.5)", borderLeft: "2px solid rgba(34,184,209,0.5)", borderRadius: "2px 0 0 0" }} />
               <div style={{ position: "absolute", bottom: 0, right: 0, width: "32px", height: "32px", borderBottom: "2px solid rgba(34,184,209,0.5)", borderRight: "2px solid rgba(34,184,209,0.5)", borderRadius: "0 0 2px 0" }} />
             </div>
             {/* Floating badge */}
-            <div style={{ position: "absolute", bottom: "-20px", right: "-20px", background: "#fff", border: "1px solid #dce9ec", borderRadius: "14px", padding: "16px 22px", boxShadow: "0 12px 40px rgba(14,116,144,0.14)", textAlign: "center", minWidth: "130px" }}>
-              <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "1.9rem", fontWeight: 600, color: "#0e7490", margin: "0 0 2px", lineHeight: 1 }}>95%</p>
+            <div
+              className="about-badge"
+              style={{
+                position: "absolute",
+                bottom: "-20px",
+                right: "-20px",
+                background: "#fff",
+                border: "1px solid #dce9ec",
+                borderRadius: "14px",
+                padding: "16px 22px",
+                boxShadow: "0 12px 40px rgba(14,116,144,0.14)",
+                textAlign: "center",
+                minWidth: "130px",
+              }}
+            >
+              <p className="about-badge-val" style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "1.9rem", fontWeight: 600, color: "#0e7490", margin: "0 0 2px", lineHeight: 1 }}>95%</p>
               <p style={{ fontSize: "0.7rem", color: "#8aacb4", margin: 0, fontWeight: 500 }}>NCLEX тэнцэлт</p>
             </div>
           </div>
 
-          {/* Text — slides from right */}
+          {/* Text */}
           <div>
             <div style={anim(sec1.inView, 0.1, "right")}>
               <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "#0e7490", letterSpacing: "0.1em", textTransform: "uppercase", display: "inline-flex", alignItems: "center", gap: "8px", marginBottom: "18px" }}>
@@ -114,10 +214,16 @@ export default function AboutSection() {
               Бид Монгол дахь сувилагчдыг NCLEX шалгалтад бэлтгэхдээ цаг хугацаа, санхүүгийн нөөцөө хамгийн үр ашигтайгаар зарцуулж, зөв стратегиар, системтэй суралцах боломжийг бүрдүүлэхийг зорьдог.
             </p>
 
-            <div style={{ ...anim(sec1.inView, 0.36, "right"), display: "flex", gap: "16px" }}>
+            <div
+              className="about-stats"
+              style={{ ...anim(sec1.inView, 0.36, "right"), display: "flex", gap: "16px" }}
+            >
               {[{ val: "500 +", label: "Бэлтгэгдсэн сувилагч" }, { val: "700 +", label: "Дасгал асуулт" }].map(({ val, label }) => (
-                <div key={label} className={`stat-card ${sec1.inView ? "count-anim" : ""}`}
-                  style={{ flex: 1, padding: "16px 20px", background: "#fff", border: "1px solid #dce9ec", borderRadius: "12px", textAlign: "center" }}>
+                <div
+                  key={label}
+                  className={`stat-card about-stat-card ${sec1.inView ? "count-anim" : ""}`}
+                  style={{ flex: 1, padding: "16px 20px", background: "#fff", border: "1px solid #dce9ec", borderRadius: "12px", textAlign: "center" }}
+                >
                   <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "1.5rem", fontWeight: 600, color: "#0d2b33", margin: "0 0 3px", lineHeight: 1 }}>{val}</p>
                   <p style={{ fontSize: "0.72rem", color: "#8aacb4", margin: 0 }}>{label}</p>
                 </div>
@@ -127,10 +233,33 @@ export default function AboutSection() {
         </div>
 
         {/* ── Section 2: Philosophy ── */}
-        <div ref={sec2.ref} style={{ ...anim(sec2.inView, 0, "scale"), display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0", marginBottom: "80px", background: "#fff", border: "1px solid #dce9ec", borderRadius: "24px", overflow: "hidden", boxShadow: "0 4px 32px rgba(14,116,144,0.06)" }}>
-
+        <div
+          ref={sec2.ref}
+          className="about-sec2"
+          style={{
+            ...anim(sec2.inView, 0, "scale"),
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "0",
+            marginBottom: "80px",
+            background: "#fff",
+            border: "1px solid #dce9ec",
+            borderRadius: "24px",
+            overflow: "hidden",
+            boxShadow: "0 4px 32px rgba(14,116,144,0.06)",
+          }}
+        >
           {/* Dark left */}
-          <div style={{ background: "linear-gradient(145deg, #0d2b33 0%, #0e4a5c 100%)", padding: "48px 44px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <div
+            className="about-philosophy-left"
+            style={{
+              background: "linear-gradient(145deg, #0d2b33 0%, #0e4a5c 100%)",
+              padding: "48px 44px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
             <div>
               <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "rgba(255,255,255,0.4)", letterSpacing: "0.12em", textTransform: "uppercase", display: "block", marginBottom: "20px" }}>
                 Манай философи
@@ -150,7 +279,10 @@ export default function AboutSection() {
           </div>
 
           {/* Right pillars */}
-          <div style={{ padding: "48px 40px 48px 36px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+          <div
+            className="about-philosophy-right"
+            style={{ padding: "48px 40px 48px 36px", display: "flex", flexDirection: "column", justifyContent: "center" }}
+          >
             <p style={{ fontSize: "0.88rem", color: "#517882", lineHeight: 1.8, margin: "0 0 28px" }}>
               Энэ платформ нь зөвхөн шалгалтанд тэнцүүлэх бус, олон улсын сувилагчийн карьераа эхлүүлэхэд шаардлагатай сэтгэлгээ, клиник шийдвэр гаргах чадварыг хөгжүүлэхэд чиглэнэ.
             </p>
@@ -159,7 +291,11 @@ export default function AboutSection() {
               { num: "02", title: "Бодит практик дасгал", body: "Кейс анализ, загвар тест, клиник нөхцөл байдлыг дуурайсан дасгалуудаар ур чадвараа бататгана." },
               { num: "03", title: "Тасралтгүй ахиц дэвшил", body: "Суралцагч бүр өөрийн түвшинд тохируулан үр дүнтэй ахиулах боломжтой бүтэц, систем." },
             ].map(({ num, title, body }, i) => (
-              <div key={num} className="philosophy-line" style={{ ...anim(sec2.inView, 0.15 + i * 0.1, "right"), padding: "18px 0", display: "flex", gap: "16px", alignItems: "flex-start" }}>
+              <div
+                key={num}
+                className="philosophy-line"
+                style={{ ...anim(sec2.inView, 0.15 + i * 0.1, "right"), padding: "18px 0", display: "flex", gap: "16px", alignItems: "flex-start" }}
+              >
                 <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "0.78rem", fontStyle: "italic", color: "#0e7490", opacity: 0.5, minWidth: "22px", paddingTop: "2px" }}>{num}</span>
                 <div>
                   <p style={{ fontSize: "0.88rem", fontWeight: 600, color: "#0d2b33", margin: "0 0 3px" }}>{title}</p>
@@ -171,9 +307,15 @@ export default function AboutSection() {
         </div>
 
         {/* ── Section 3: Feature cards ── */}
-        <div ref={sec3.ref} style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
+        <div
+          ref={sec3.ref}
+          className="about-sec3"
+          style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}
+        >
           {features.map(({ icon: Icon, title, description }, i) => (
-            <div key={title} className="feat-card"
+            <div
+              key={title}
+              className="feat-card"
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
               style={{ ...anim(sec3.inView, i * 0.1, "up"), background: "#fff", border: "1px solid #dce9ec", borderRadius: "16px", padding: "26px 22px", cursor: "default" }}

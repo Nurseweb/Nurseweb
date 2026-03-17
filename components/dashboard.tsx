@@ -51,6 +51,110 @@ function getToken() {
   return typeof window !== "undefined" ? localStorage.getItem("token") : "";
 }
 
+// ── Course Loader Skeleton ──
+function CourseLoader({ course }: { course: any }) {
+  return (
+    <div
+      style={{
+        background: "#fff",
+        border: "1px solid #dce9ec",
+        borderRadius: "20px",
+        overflow: "hidden",
+        minHeight: "400px",
+      }}
+    >
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: -600px 0; }
+          100% { background-position: 600px 0; }
+        }
+        .shimmer {
+          background: linear-gradient(90deg, #f0f6f8 25%, #e4eef1 50%, #f0f6f8 75%);
+          background-size: 600px 100%;
+          animation: shimmer 1.4s infinite linear;
+          border-radius: 8px;
+        }
+      `}</style>
+
+      {/* Top image skeleton */}
+      <div className="shimmer" style={{ height: "220px", borderRadius: 0 }} />
+
+      <div style={{ padding: "28px 32px" }}>
+        {/* Back button skeleton */}
+        <div className="shimmer" style={{ width: "80px", height: "20px", marginBottom: "28px" }} />
+
+        {/* Title */}
+        <div className="shimmer" style={{ width: "60%", height: "28px", marginBottom: "12px" }} />
+        <div className="shimmer" style={{ width: "40%", height: "20px", marginBottom: "32px" }} />
+
+        {/* Language toggle */}
+        <div style={{ display: "flex", gap: "10px", marginBottom: "28px" }}>
+          <div className="shimmer" style={{ width: "120px", height: "40px", borderRadius: "10px" }} />
+          <div className="shimmer" style={{ width: "120px", height: "40px", borderRadius: "10px" }} />
+        </div>
+
+        {/* PDF viewer area */}
+        <div className="shimmer" style={{ width: "100%", height: "340px", borderRadius: "12px" }} />
+      </div>
+
+      {/* Loading indicator */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          pointerEvents: "none",
+        }}
+      >
+        <div
+          style={{
+            background: "rgba(255,255,255,0.92)",
+            backdropFilter: "blur(8px)",
+            borderRadius: "16px",
+            padding: "24px 32px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "14px",
+            boxShadow: "0 8px 32px rgba(14,116,144,0.12)",
+            border: "1px solid rgba(14,116,144,0.1)",
+          }}
+        >
+          <div
+            style={{
+              width: "36px",
+              height: "36px",
+              borderRadius: "50%",
+              border: "3px solid #e0eef2",
+              borderTopColor: "#0e7490",
+              animation: "spin 0.8s linear infinite",
+            }}
+          />
+          <div style={{ textAlign: "center" }}>
+            <p
+              style={{
+                fontFamily: "'Lora', Georgia, serif",
+                fontSize: "0.95rem",
+                fontWeight: 600,
+                color: "#0d2b33",
+                margin: "0 0 4px",
+              }}
+            >
+              {course?.title}
+            </p>
+            <p style={{ fontSize: "0.78rem", color: "#8aacb4", margin: 0 }}>
+              Хичээл ачаалж байна...
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Create User Modal ──
 function CreateUserModal({
   onClose,
@@ -127,100 +231,32 @@ function CreateUserModal({
           border: "1px solid #dce9ec",
         }}
       >
-        <div
-          style={{
-            height: "3px",
-            background: "linear-gradient(90deg, #0e7490, #22b8d1)",
-          }}
-        />
+        <div style={{ height: "3px", background: "linear-gradient(90deg, #0e7490, #22b8d1)" }} />
         <div style={{ padding: "32px" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: "24px",
-            }}
-          >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
             <div>
-              <h3
-                style={{
-                  fontFamily: "'Lora', Georgia, serif",
-                  fontSize: "1.2rem",
-                  fontWeight: 600,
-                  color: "#0d2b33",
-                  margin: "0 0 3px",
-                }}
-              >
+              <h3 style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "1.2rem", fontWeight: 600, color: "#0d2b33", margin: "0 0 3px" }}>
                 Шинэ хэрэглэгч
               </h3>
-              <p style={{ fontSize: "0.78rem", color: "#8aacb4", margin: 0 }}>
-                Сувилагчийн бүртгэл үүсгэх
-              </p>
+              <p style={{ fontSize: "0.78rem", color: "#8aacb4", margin: 0 }}>Сувилагчийн бүртгэл үүсгэх</p>
             </div>
-            <button
-              onClick={onClose}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                color: "#8aacb4",
-                padding: "4px",
-              }}
-            >
+            <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#8aacb4", padding: "4px" }}>
               <X size={18} />
             </button>
           </div>
           {error && (
-            <div
-              style={{
-                background: "rgba(220,38,38,0.06)",
-                border: "1px solid rgba(220,38,38,0.15)",
-                borderRadius: "8px",
-                padding: "10px 14px",
-                fontSize: "0.8rem",
-                color: "#b91c1c",
-                marginBottom: "16px",
-              }}
-            >
+            <div style={{ background: "rgba(220,38,38,0.06)", border: "1px solid rgba(220,38,38,0.15)", borderRadius: "8px", padding: "10px 14px", fontSize: "0.8rem", color: "#b91c1c", marginBottom: "16px" }}>
               {error}
             </div>
           )}
-          <form
-            onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: "14px" }}
-          >
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
             {[
-              {
-                key: "name",
-                label: "Нэр",
-                placeholder: "Бат-Эрдэнэ",
-                type: "text",
-              },
-              {
-                key: "email",
-                label: "Имэйл",
-                placeholder: "bat@email.com",
-                type: "email",
-              },
-              {
-                key: "phone",
-                label: "Утасны дугаар",
-                placeholder: "99001234",
-                type: "tel",
-              },
+              { key: "name", label: "Нэр", placeholder: "Бат-Эрдэнэ", type: "text" },
+              { key: "email", label: "Имэйл", placeholder: "bat@email.com", type: "email" },
+              { key: "phone", label: "Утасны дугаар", placeholder: "99001234", type: "tel" },
             ].map(({ key, label, placeholder, type }) => (
               <div key={key}>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: "0.75rem",
-                    fontWeight: 600,
-                    color: "#3d6672",
-                    marginBottom: "6px",
-                    letterSpacing: "0.02em",
-                  }}
-                >
+                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: "#3d6672", marginBottom: "6px", letterSpacing: "0.02em" }}>
                   {label}
                 </label>
                 <input
@@ -228,24 +264,13 @@ function CreateUserModal({
                   type={type}
                   placeholder={placeholder}
                   value={(form as any)[key]}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, [key]: e.target.value }))
-                  }
+                  onChange={(e) => setForm((prev) => ({ ...prev, [key]: e.target.value }))}
                   required
                 />
               </div>
             ))}
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                  color: "#3d6672",
-                  marginBottom: "6px",
-                  letterSpacing: "0.02em",
-                }}
-              >
+              <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: "#3d6672", marginBottom: "6px", letterSpacing: "0.02em" }}>
                 Нууц үг
               </label>
               <div style={{ position: "relative" }}>
@@ -254,25 +279,10 @@ function CreateUserModal({
                   type={showPw ? "text" : "password"}
                   placeholder="••••••••"
                   value={form.password}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, password: e.target.value }))
-                  }
+                  onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
                   required
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPw(!showPw)}
-                  style={{
-                    position: "absolute",
-                    right: "12px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "#8aacb4",
-                  }}
-                >
+                <button type="button" onClick={() => setShowPw(!showPw)} style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#8aacb4" }}>
                   {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
@@ -280,20 +290,7 @@ function CreateUserModal({
             <button
               type="submit"
               disabled={loading}
-              style={{
-                marginTop: "4px",
-                width: "100%",
-                background: loading ? "#8aacb4" : "#0e7490",
-                color: "#fff",
-                border: "none",
-                borderRadius: "9px",
-                padding: "13px",
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "0.9rem",
-                fontWeight: 600,
-                cursor: loading ? "not-allowed" : "pointer",
-                transition: "background 0.2s",
-              }}
+              style={{ marginTop: "4px", width: "100%", background: loading ? "#8aacb4" : "#0e7490", color: "#fff", border: "none", borderRadius: "9px", padding: "13px", fontFamily: "'DM Sans', sans-serif", fontSize: "0.9rem", fontWeight: 600, cursor: loading ? "not-allowed" : "pointer", transition: "background 0.2s" }}
             >
               {loading ? "Үүсгэж байна..." : "Бүртгэл үүсгэх"}
             </button>
@@ -304,20 +301,8 @@ function CreateUserModal({
   );
 }
 
-function EditUserModal({
-  user,
-  onClose,
-  onSaved,
-}: {
-  user: any;
-  onClose: () => void;
-  onSaved: () => void;
-}) {
-  const [form, setForm] = useState({
-    name: user.name,
-    phone: user.phone ?? "",
-    password: "",
-  });
+function EditUserModal({ user, onClose, onSaved }: { user: any; onClose: () => void; onSaved: () => void }) {
+  const [form, setForm] = useState({ name: user.name, phone: user.phone ?? "", password: "" });
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -325,305 +310,66 @@ function EditUserModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
-    if (!form.name) {
-      setError("Нэр хоосон байж болохгүй.");
-      return;
-    }
+    setError(""); setSuccess("");
+    if (!form.name) { setError("Нэр хоосон байж болохгүй."); return; }
     const body: any = { name: form.name, phone: form.phone };
     if (form.password.trim()) {
-      if (form.password.length < 6) {
-        setError("Нууц үг дор хаяж 6 тэмдэгт байна.");
-        return;
-      }
+      if (form.password.length < 6) { setError("Нууц үг дор хаяж 6 тэмдэгт байна."); return; }
       body.password = form.password;
     }
     setLoading(true);
     try {
-      const res = await fetch(`${API}/admin/users/${user.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify(body),
-      });
+      const res = await fetch(`${API}/admin/users/${user.id}`, { method: "PATCH", headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` }, body: JSON.stringify(body) });
       const data = await res.json();
-      if (!res.ok) {
-        setError(data.message ?? "Алдаа гарлаа.");
-        return;
-      }
+      if (!res.ok) { setError(data.message ?? "Алдаа гарлаа."); return; }
       setSuccess("Амжилттай хадгаллаа.");
       onSaved();
       setTimeout(onClose, 800);
-    } catch {
-      setError("Серверт холбогдох боломжгүй.");
-    } finally {
-      setLoading(false);
-    }
+    } catch { setError("Серверт холбогдох боломжгүй."); }
+    finally { setLoading(false); }
   };
 
   return (
-    <div
-      onClick={onClose}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 60,
-        background: "rgba(13,43,51,0.4)",
-        backdropFilter: "blur(6px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "16px",
-      }}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: "#fff",
-          borderRadius: "20px",
-          width: "100%",
-          maxWidth: "440px",
-          overflow: "hidden",
-          boxShadow: "0 24px 64px rgba(13,43,51,0.15)",
-          border: "1px solid #dce9ec",
-        }}
-      >
-        <div
-          style={{
-            height: "3px",
-            background: "linear-gradient(90deg, #0e7490, #22b8d1)",
-          }}
-        />
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 60, background: "rgba(13,43,51,0.4)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: "20px", width: "100%", maxWidth: "440px", overflow: "hidden", boxShadow: "0 24px 64px rgba(13,43,51,0.15)", border: "1px solid #dce9ec" }}>
+        <div style={{ height: "3px", background: "linear-gradient(90deg, #0e7490, #22b8d1)" }} />
         <div style={{ padding: "32px" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: "24px",
-            }}
-          >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "10px",
-                  background: "#0e7490",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <span
-                  style={{ color: "#fff", fontSize: "1rem", fontWeight: 700 }}
-                >
-                  {user.name?.charAt(0).toUpperCase()}
-                </span>
+              <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "#0e7490", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <span style={{ color: "#fff", fontSize: "1rem", fontWeight: 700 }}>{user.name?.charAt(0).toUpperCase()}</span>
               </div>
               <div>
-                <h3
-                  style={{
-                    fontFamily: "'Lora', Georgia, serif",
-                    fontSize: "1.15rem",
-                    fontWeight: 600,
-                    color: "#0d2b33",
-                    margin: "0 0 2px",
-                  }}
-                >
-                  Мэдээлэл засах
-                </h3>
-                <p style={{ fontSize: "0.75rem", color: "#8aacb4", margin: 0 }}>
-                  {user.email}
-                </p>
+                <h3 style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "1.15rem", fontWeight: 600, color: "#0d2b33", margin: "0 0 2px" }}>Мэдээлэл засах</h3>
+                <p style={{ fontSize: "0.75rem", color: "#8aacb4", margin: 0 }}>{user.email}</p>
               </div>
             </div>
-            <button
-              onClick={onClose}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                color: "#8aacb4",
-                padding: "4px",
-              }}
-            >
-              <X size={18} />
-            </button>
+            <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#8aacb4", padding: "4px" }}><X size={18} /></button>
           </div>
-          {error && (
-            <div
-              style={{
-                background: "rgba(220,38,38,0.06)",
-                border: "1px solid rgba(220,38,38,0.15)",
-                borderRadius: "8px",
-                padding: "10px 14px",
-                fontSize: "0.8rem",
-                color: "#b91c1c",
-                marginBottom: "16px",
-              }}
-            >
-              {error}
-            </div>
-          )}
-          {success && (
-            <div
-              style={{
-                background: "rgba(14,116,144,0.07)",
-                border: "1px solid rgba(14,116,144,0.2)",
-                borderRadius: "8px",
-                padding: "10px 14px",
-                fontSize: "0.8rem",
-                color: "#0e7490",
-                marginBottom: "16px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              ✓ {success}
-            </div>
-          )}
-          <form
-            onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: "14px" }}
-          >
+          {error && <div style={{ background: "rgba(220,38,38,0.06)", border: "1px solid rgba(220,38,38,0.15)", borderRadius: "8px", padding: "10px 14px", fontSize: "0.8rem", color: "#b91c1c", marginBottom: "16px" }}>{error}</div>}
+          {success && <div style={{ background: "rgba(14,116,144,0.07)", border: "1px solid rgba(14,116,144,0.2)", borderRadius: "8px", padding: "10px 14px", fontSize: "0.8rem", color: "#0e7490", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>✓ {success}</div>}
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                  color: "#3d6672",
-                  marginBottom: "6px",
-                  letterSpacing: "0.02em",
-                }}
-              >
-                Нэр
-              </label>
-              <input
-                className="field-input"
-                type="text"
-                value={form.name}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, name: e.target.value }))
-                }
-                required
-              />
+              <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: "#3d6672", marginBottom: "6px", letterSpacing: "0.02em" }}>Нэр</label>
+              <input className="field-input" type="text" value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} required />
             </div>
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                  color: "#3d6672",
-                  marginBottom: "6px",
-                  letterSpacing: "0.02em",
-                }}
-              >
-                Утасны дугаар
-              </label>
-              <input
-                className="field-input"
-                type="tel"
-                placeholder="99001234"
-                value={form.phone}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, phone: e.target.value }))
-                }
-              />
+              <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: "#3d6672", marginBottom: "6px", letterSpacing: "0.02em" }}>Утасны дугаар</label>
+              <input className="field-input" type="tel" placeholder="99001234" value={form.phone} onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))} />
             </div>
             <div style={{ borderTop: "1px solid #e8f0f2", paddingTop: "14px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                  color: "#3d6672",
-                  marginBottom: "4px",
-                  letterSpacing: "0.02em",
-                }}
-              >
-                Шинэ нууц үг
-              </label>
-              <p
-                style={{
-                  fontSize: "0.72rem",
-                  color: "#a8c4cc",
-                  margin: "0 0 8px",
-                }}
-              >
-                Хоосон орхивол нууц үг өөрчлөгдөхгүй
-              </p>
+              <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: "#3d6672", marginBottom: "4px", letterSpacing: "0.02em" }}>Шинэ нууц үг</label>
+              <p style={{ fontSize: "0.72rem", color: "#a8c4cc", margin: "0 0 8px" }}>Хоосон орхивол нууц үг өөрчлөгдөхгүй</p>
               <div style={{ position: "relative" }}>
-                <input
-                  className="field-input field-input-pr"
-                  type={showPw ? "text" : "password"}
-                  placeholder="Шинэ нууц үг оруулах..."
-                  value={form.password}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, password: e.target.value }))
-                  }
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPw(!showPw)}
-                  style={{
-                    position: "absolute",
-                    right: "12px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "#8aacb4",
-                  }}
-                >
+                <input className="field-input field-input-pr" type={showPw ? "text" : "password"} placeholder="Шинэ нууц үг оруулах..." value={form.password} onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))} />
+                <button type="button" onClick={() => setShowPw(!showPw)} style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#8aacb4" }}>
                   {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
             </div>
             <div style={{ display: "flex", gap: "10px", marginTop: "4px" }}>
-              <button
-                type="button"
-                onClick={onClose}
-                style={{
-                  flex: 1,
-                  background: "#f0f6f8",
-                  color: "#517882",
-                  border: "none",
-                  borderRadius: "9px",
-                  padding: "12px",
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: "0.88rem",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                Цуцлах
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                style={{
-                  flex: 2,
-                  background: loading ? "#8aacb4" : "#0e7490",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "9px",
-                  padding: "12px",
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: "0.88rem",
-                  fontWeight: 600,
-                  cursor: loading ? "not-allowed" : "pointer",
-                  transition: "background 0.2s",
-                }}
-              >
+              <button type="button" onClick={onClose} style={{ flex: 1, background: "#f0f6f8", color: "#517882", border: "none", borderRadius: "9px", padding: "12px", fontFamily: "'DM Sans', sans-serif", fontSize: "0.88rem", fontWeight: 600, cursor: "pointer" }}>Цуцлах</button>
+              <button type="submit" disabled={loading} style={{ flex: 2, background: loading ? "#8aacb4" : "#0e7490", color: "#fff", border: "none", borderRadius: "9px", padding: "12px", fontFamily: "'DM Sans', sans-serif", fontSize: "0.88rem", fontWeight: 600, cursor: loading ? "not-allowed" : "pointer", transition: "background 0.2s" }}>
                 {loading ? "Хадгалж байна..." : "Хадгалах"}
               </button>
             </div>
@@ -644,380 +390,111 @@ function AdminPanel() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch(`${API}/admin/users`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
+      const res = await fetch(`${API}/admin/users`, { headers: { Authorization: `Bearer ${getToken()}` } });
       const data = await res.json();
       if (res.ok) setUsers(data);
-    } catch {
-      console.error("Users fetch failed");
-    } finally {
-      setLoading(false);
-    }
+    } catch { console.error("Users fetch failed"); }
+    finally { setLoading(false); }
   };
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  useEffect(() => { fetchUsers(); }, []);
 
   const handleToggle = async (id: string) => {
     setActionLoading(id + "_toggle");
     try {
-      const res = await fetch(`${API}/admin/users/${id}/toggle`, {
-        method: "PATCH",
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
+      const res = await fetch(`${API}/admin/users/${id}/toggle`, { method: "PATCH", headers: { Authorization: `Bearer ${getToken()}` } });
       if (res.ok) fetchUsers();
-    } finally {
-      setActionLoading(null);
-    }
+    } finally { setActionLoading(null); }
   };
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`"${name}" хэрэглэгчийг устгах уу?`)) return;
     setActionLoading(id + "_delete");
     try {
-      const res = await fetch(`${API}/admin/users/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
+      const res = await fetch(`${API}/admin/users/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${getToken()}` } });
       if (res.ok) fetchUsers();
-    } finally {
-      setActionLoading(null);
-    }
+    } finally { setActionLoading(null); }
   };
 
   return (
     <>
-      {showCreate && (
-        <CreateUserModal
-          onClose={() => setShowCreate(false)}
-          onCreated={fetchUsers}
-        />
-      )}
-      {editingUser && (
-        <EditUserModal
-          user={editingUser}
-          onClose={() => setEditingUser(null)}
-          onSaved={fetchUsers}
-        />
-      )}
+      {showCreate && <CreateUserModal onClose={() => setShowCreate(false)} onCreated={fetchUsers} />}
+      {editingUser && <EditUserModal user={editingUser} onClose={() => setEditingUser(null)} onSaved={fetchUsers} />}
       <div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "24px",
-          }}
-        >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
           <div>
-            <h2
-              style={{
-                fontFamily: "'Lora', Georgia, serif",
-                fontSize: "1.4rem",
-                fontWeight: 600,
-                color: "#0d2b33",
-                margin: "0 0 4px",
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-              }}
-            >
+            <h2 style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "1.4rem", fontWeight: 600, color: "#0d2b33", margin: "0 0 4px", display: "flex", alignItems: "center", gap: "10px" }}>
               <Users size={20} color="#0e7490" />
             </h2>
-            <p style={{ fontSize: "0.82rem", color: "#7a9ea7", margin: 0 }}>
-              Нийт {users.length} хэрэглэгч бүртгэлтэй
-            </p>
+            <p style={{ fontSize: "0.82rem", color: "#7a9ea7", margin: 0 }}>Нийт {users.length} хэрэглэгч бүртгэлтэй</p>
           </div>
           <button
             onClick={() => setShowCreate(true)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "7px",
-              background: "#0e7490",
-              color: "#fff",
-              border: "none",
-              borderRadius: "9px",
-              padding: "10px 18px",
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: "0.85rem",
-              fontWeight: 600,
-              cursor: "pointer",
-              transition: "background 0.2s",
-            }}
+            style={{ display: "flex", alignItems: "center", gap: "7px", background: "#0e7490", color: "#fff", border: "none", borderRadius: "9px", padding: "10px 18px", fontFamily: "'DM Sans', sans-serif", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", transition: "background 0.2s" }}
             onMouseEnter={(e) => (e.currentTarget.style.background = "#0c6783")}
             onMouseLeave={(e) => (e.currentTarget.style.background = "#0e7490")}
           >
             <Plus size={15} /> Хэрэглэгч нэмэх
           </button>
         </div>
-        <div
-          style={{
-            background: "#fff",
-            border: "1px solid #dce9ec",
-            borderRadius: "16px",
-            overflow: "hidden",
-          }}
-        >
+        <div style={{ background: "#fff", border: "1px solid #dce9ec", borderRadius: "16px", overflow: "hidden" }}>
           {loading ? (
             <div style={{ padding: "48px", textAlign: "center" }}>
-              <div
-                style={{
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "50%",
-                  border: "3px solid #dce9ec",
-                  borderTopColor: "#0e7490",
-                  animation: "spin 0.8s linear infinite",
-                  margin: "0 auto 12px",
-                }}
-              />
-              <p style={{ fontSize: "0.82rem", color: "#8aacb4", margin: 0 }}>
-                Ачаалж байна...
-              </p>
+              <div style={{ width: "32px", height: "32px", borderRadius: "50%", border: "3px solid #dce9ec", borderTopColor: "#0e7490", animation: "spin 0.8s linear infinite", margin: "0 auto 12px" }} />
+              <p style={{ fontSize: "0.82rem", color: "#8aacb4", margin: 0 }}>Ачаалж байна...</p>
             </div>
           ) : users.length === 0 ? (
             <div style={{ padding: "48px", textAlign: "center" }}>
-              <Users
-                size={32}
-                color="#c8dde2"
-                style={{ marginBottom: "12px" }}
-              />
-              <p style={{ fontSize: "0.85rem", color: "#8aacb4", margin: 0 }}>
-                Хэрэглэгч байхгүй байна
-              </p>
+              <Users size={32} color="#c8dde2" style={{ marginBottom: "12px" }} />
+              <p style={{ fontSize: "0.85rem", color: "#8aacb4", margin: 0 }}>Хэрэглэгч байхгүй байна</p>
             </div>
           ) : (
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
-                <tr
-                  style={{
-                    background: "#f8fafb",
-                    borderBottom: "1px solid #e8f0f2",
-                  }}
-                >
-                  {["Нэр", "Имэйл", "Утас", "Статус", "Үүсгэсэн", "Үйлдэл"].map(
-                    (h) => (
-                      <th
-                        key={h}
-                        style={{
-                          padding: "12px 16px",
-                          textAlign: "left",
-                          fontSize: "0.72rem",
-                          fontWeight: 600,
-                          color: "#7a9ea7",
-                          letterSpacing: "0.06em",
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        {h}
-                      </th>
-                    ),
-                  )}
+                <tr style={{ background: "#f8fafb", borderBottom: "1px solid #e8f0f2" }}>
+                  {["Нэр", "Имэйл", "Утас", "Статус", "Үүсгэсэн", "Үйлдэл"].map((h) => (
+                    <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: "0.72rem", fontWeight: 600, color: "#7a9ea7", letterSpacing: "0.06em", textTransform: "uppercase" }}>{h}</th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {users.map((u, i) => (
-                  <tr
-                    key={u.id}
-                    style={{
-                      borderBottom:
-                        i < users.length - 1 ? "1px solid #e8f0f2" : "none",
-                      transition: "background 0.15s",
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = "#f8fbfc")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = "transparent")
-                    }
+                  <tr key={u.id} style={{ borderBottom: i < users.length - 1 ? "1px solid #e8f0f2" : "none", transition: "background 0.15s" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#f8fbfc")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                   >
                     <td style={{ padding: "14px 16px" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: "32px",
-                            height: "32px",
-                            borderRadius: "8px",
-                            background: "#0e7490",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexShrink: 0,
-                          }}
-                        >
-                          <span
-                            style={{
-                              color: "#fff",
-                              fontSize: "0.8rem",
-                              fontWeight: 700,
-                            }}
-                          >
-                            {u.name?.charAt(0).toUpperCase()}
-                          </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "#0e7490", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <span style={{ color: "#fff", fontSize: "0.8rem", fontWeight: 700 }}>{u.name?.charAt(0).toUpperCase()}</span>
                         </div>
-                        <span
-                          style={{
-                            fontSize: "0.85rem",
-                            fontWeight: 600,
-                            color: "#0d2b33",
-                          }}
-                        >
-                          {u.name}
-                        </span>
+                        <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#0d2b33" }}>{u.name}</span>
                       </div>
                     </td>
-                    <td
-                      style={{
-                        padding: "14px 16px",
-                        fontSize: "0.82rem",
-                        color: "#517882",
-                      }}
-                    >
-                      {u.email}
-                    </td>
-                    <td
-                      style={{
-                        padding: "14px 16px",
-                        fontSize: "0.82rem",
-                        color: "#517882",
-                      }}
-                    >
-                      {u.phone ?? "—"}
-                    </td>
+                    <td style={{ padding: "14px 16px", fontSize: "0.82rem", color: "#517882" }}>{u.email}</td>
+                    <td style={{ padding: "14px 16px", fontSize: "0.82rem", color: "#517882" }}>{u.phone ?? "—"}</td>
                     <td style={{ padding: "14px 16px" }}>
-                      <span
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "5px",
-                          background: u.is_active
-                            ? "rgba(14,116,144,0.08)"
-                            : "rgba(220,38,38,0.06)",
-                          color: u.is_active ? "#0e7490" : "#b91c1c",
-                          border: `1px solid ${u.is_active ? "rgba(14,116,144,0.2)" : "rgba(220,38,38,0.15)"}`,
-                          borderRadius: "99px",
-                          padding: "3px 10px",
-                          fontSize: "0.72rem",
-                          fontWeight: 600,
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: "5px",
-                            height: "5px",
-                            borderRadius: "50%",
-                            background: u.is_active ? "#0e7490" : "#b91c1c",
-                          }}
-                        />
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", background: u.is_active ? "rgba(14,116,144,0.08)" : "rgba(220,38,38,0.06)", color: u.is_active ? "#0e7490" : "#b91c1c", border: `1px solid ${u.is_active ? "rgba(14,116,144,0.2)" : "rgba(220,38,38,0.15)"}`, borderRadius: "99px", padding: "3px 10px", fontSize: "0.72rem", fontWeight: 600 }}>
+                        <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: u.is_active ? "#0e7490" : "#b91c1c" }} />
                         {u.is_active ? "Идэвхтэй" : "Идэвхгүй"}
                       </span>
                     </td>
-                    <td
-                      style={{
-                        padding: "14px 16px",
-                        fontSize: "0.78rem",
-                        color: "#8aacb4",
-                      }}
-                    >
-                      {new Date(u.created_at).toLocaleDateString("mn-MN")}
-                    </td>
+                    <td style={{ padding: "14px 16px", fontSize: "0.78rem", color: "#8aacb4" }}>{new Date(u.created_at).toLocaleDateString("mn-MN")}</td>
                     <td style={{ padding: "14px 16px" }}>
                       <div style={{ display: "flex", gap: "6px" }}>
-                        <button
-                          onClick={() => setEditingUser(u)}
-                          title="Засах"
-                          style={{
-                            background: "none",
-                            border: "1px solid #dce9ec",
-                            borderRadius: "7px",
-                            padding: "6px 8px",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            color: "#517882",
-                            transition: "all 0.2s",
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = "#0e7490";
-                            e.currentTarget.style.background =
-                              "rgba(14,116,144,0.05)";
-                            e.currentTarget.style.color = "#0e7490";
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = "#dce9ec";
-                            e.currentTarget.style.background = "none";
-                            e.currentTarget.style.color = "#517882";
-                          }}
-                        >
+                        <button onClick={() => setEditingUser(u)} title="Засах" style={{ background: "none", border: "1px solid #dce9ec", borderRadius: "7px", padding: "6px 8px", cursor: "pointer", display: "flex", alignItems: "center", color: "#517882", transition: "all 0.2s" }}
+                          onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#0e7490"; e.currentTarget.style.background = "rgba(14,116,144,0.05)"; e.currentTarget.style.color = "#0e7490"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#dce9ec"; e.currentTarget.style.background = "none"; e.currentTarget.style.color = "#517882"; }}>
                           <Pencil size={14} />
                         </button>
-                        <button
-                          onClick={() => handleToggle(u.id)}
-                          disabled={actionLoading === u.id + "_toggle"}
-                          title={
-                            u.is_active ? "Идэвхгүй болгох" : "Идэвхжүүлэх"
-                          }
-                          style={{
-                            background: "none",
-                            border: "1px solid #dce9ec",
-                            borderRadius: "7px",
-                            padding: "6px 8px",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            color: u.is_active ? "#0e7490" : "#8aacb4",
-                            transition: "all 0.2s",
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = "#0e7490";
-                            e.currentTarget.style.background =
-                              "rgba(14,116,144,0.05)";
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = "#dce9ec";
-                            e.currentTarget.style.background = "none";
-                          }}
-                        >
-                          {u.is_active ? (
-                            <ToggleRight size={15} />
-                          ) : (
-                            <ToggleLeft size={15} />
-                          )}
+                        <button onClick={() => handleToggle(u.id)} disabled={actionLoading === u.id + "_toggle"} title={u.is_active ? "Идэвхгүй болгох" : "Идэвхжүүлэх"} style={{ background: "none", border: "1px solid #dce9ec", borderRadius: "7px", padding: "6px 8px", cursor: "pointer", display: "flex", alignItems: "center", color: u.is_active ? "#0e7490" : "#8aacb4", transition: "all 0.2s" }}
+                          onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#0e7490"; e.currentTarget.style.background = "rgba(14,116,144,0.05)"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#dce9ec"; e.currentTarget.style.background = "none"; }}>
+                          {u.is_active ? <ToggleRight size={15} /> : <ToggleLeft size={15} />}
                         </button>
-                        <button
-                          onClick={() => handleDelete(u.id, u.name)}
-                          disabled={actionLoading === u.id + "_delete"}
-                          title="Устгах"
-                          style={{
-                            background: "none",
-                            border: "1px solid #dce9ec",
-                            borderRadius: "7px",
-                            padding: "6px 8px",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            color: "#b91c1c",
-                            transition: "all 0.2s",
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = "#b91c1c";
-                            e.currentTarget.style.background =
-                              "rgba(220,38,38,0.05)";
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = "#dce9ec";
-                            e.currentTarget.style.background = "none";
-                          }}
-                        >
+                        <button onClick={() => handleDelete(u.id, u.name)} disabled={actionLoading === u.id + "_delete"} title="Устгах" style={{ background: "none", border: "1px solid #dce9ec", borderRadius: "7px", padding: "6px 8px", cursor: "pointer", display: "flex", alignItems: "center", color: "#b91c1c", transition: "all 0.2s" }}
+                          onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#b91c1c"; e.currentTarget.style.background = "rgba(220,38,38,0.05)"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#dce9ec"; e.currentTarget.style.background = "none"; }}>
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -1051,29 +528,44 @@ export default function Dashboard({
   const [activeTab, setActiveTab] = useState("courses");
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [quizLang, setQuizLang] = useState<"mn" | "en" | null>(null);
+
+  // ── Course loading state ──
   const [selectedCourse, setSelectedCourse] = useState<any | null>(null);
+  const [courseLoading, setCourseLoading] = useState(false);
+  const [loadingCourseId, setLoadingCourseId] = useState<number | null>(null);
+
+  const handleSelectCourse = (course: any) => {
+    setCourseLoading(true);
+    setLoadingCourseId(course.id);
+    // Simulate fetch delay — replace with actual API call if needed:
+    // const data = await fetch(`${API}/courses/${course.id}`)
+    setTimeout(() => {
+      setSelectedCourse(course);
+      setCourseLoading(false);
+      setLoadingCourseId(null);
+    }, 900);
+  };
+
+  const handleBackFromCourse = () => {
+    setSelectedCourse(null);
+    setCourseLoading(false);
+    setLoadingCourseId(null);
+  };
 
   const tabs = [
     { id: "courses", label: "Хичээлүүд", icon: BookOpen },
     { id: "quizzes", label: "Шалгалт", icon: ClipboardCheck },
-    ...(user?.role === "admin"
-      ? [{ id: "admin", label: "Admin", icon: Shield }]
-      : []),
+    ...(user?.role === "admin" ? [{ id: "admin", label: "Admin", icon: Shield }] : []),
   ];
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f8fafb",
-        fontFamily: "'DM Sans', sans-serif",
-      }}
-    >
+    <div style={{ minHeight: "100vh", background: "#f8fafb", fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap');
         .tab-btn { transition: color 0.2s ease, background 0.2s ease; cursor: pointer; border: none; }
         .course-card { transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease; cursor: pointer; border: none; text-align: left; background: #fff; }
         .course-card:hover { box-shadow: 0 12px 40px rgba(14,116,144,0.12); transform: translateY(-3px); border-color: rgba(14,116,144,0.25) !important; }
+        .course-card:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
         .course-img { transition: transform 0.5s ease; }
         .course-card:hover .course-img { transform: scale(1.04); }
         .logout-btn { font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500; background: transparent; color: #517882; border: 1.5px solid #dce9ec; border-radius: 7px; padding: 7px 16px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: border-color 0.2s, color 0.2s; }
@@ -1082,475 +574,193 @@ export default function Dashboard({
         .field-input::placeholder { color: #a8c4cc; }
         .field-input:focus { border-color: #0e7490; background: #fff; }
         .field-input-pr { padding-right: 42px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes shimmer { 0% { background-position: -600px 0; } 100% { background-position: 600px 0; } }
+        .shimmer { background: linear-gradient(90deg, #f0f6f8 25%, #e4eef1 50%, #f0f6f8 75%); background-size: 600px 100%; animation: shimmer 1.4s infinite linear; border-radius: 8px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+        .course-loader-enter { animation: fadeIn 0.3s ease both; }
       `}</style>
 
       {/* Header */}
-      <header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 40,
-          background: "rgba(248,250,251,0.90)",
-          backdropFilter: "blur(14px)",
-          borderBottom: "1px solid #e4eef1",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1080px",
-            margin: "0 auto",
-            padding: "0 32px",
-            height: "64px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+      <header style={{ position: "sticky", top: 0, zIndex: 40, background: "rgba(248,250,251,0.90)", backdropFilter: "blur(14px)", borderBottom: "1px solid #e4eef1" }}>
+        <div style={{ maxWidth: "1080px", margin: "0 auto", padding: "0 32px", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-            <div
-              style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "9px",
-                background: "#0e7490",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <span
-                style={{
-                  color: "#fff",
-                  fontFamily: "'Lora', serif",
-                  fontSize: "0.95rem",
-                  fontWeight: 600,
-                }}
-              >
-                {user?.name?.charAt(0).toUpperCase()}
-              </span>
+            <div style={{ width: "36px", height: "36px", borderRadius: "9px", background: "#0e7490", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ color: "#fff", fontFamily: "'Lora', serif", fontSize: "0.95rem", fontWeight: 600 }}>{user?.name?.charAt(0).toUpperCase()}</span>
             </div>
             <div>
-              <p
-                style={{
-                  fontSize: "0.85rem",
-                  fontWeight: 600,
-                  color: "#0d2b33",
-                  margin: 0,
-                  lineHeight: 1.2,
-                }}
-              >
-                {user?.name}
-              </p>
-              <p style={{ fontSize: "0.72rem", color: "#8aacb4", margin: 0 }}>
-                {user?.email}
-              </p>
+              <p style={{ fontSize: "0.85rem", fontWeight: 600, color: "#0d2b33", margin: 0, lineHeight: 1.2 }}>{user?.name}</p>
+              <p style={{ fontSize: "0.72rem", color: "#8aacb4", margin: 0 }}>{user?.email}</p>
             </div>
           </div>
-          <button className="logout-btn" onClick={logout}>
-            <LogOut size={14} /> Гарах
-          </button>
+          <button className="logout-btn" onClick={logout}><LogOut size={14} /> Гарах</button>
         </div>
       </header>
 
-      <main
-        style={{
-          maxWidth: "1080px",
-          margin: "0 auto",
-          padding: "40px 32px 80px",
-        }}
-      >
+      <main style={{ maxWidth: "1080px", margin: "0 auto", padding: "40px 32px 80px" }}>
         {/* Banner */}
-        <div
-          style={{
-            background: "linear-gradient(135deg, #0d2b33 0%, #0e4a5c 100%)",
-            borderRadius: "20px",
-            padding: "40px 48px",
-            marginBottom: "40px",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: "-60px",
-              right: "-60px",
-              width: "220px",
-              height: "220px",
-              borderRadius: "50%",
-              background: "rgba(255,255,255,0.04)",
-            }}
-          />
+        <div style={{ background: "linear-gradient(135deg, #0d2b33 0%, #0e4a5c 100%)", borderRadius: "20px", padding: "40px 48px", marginBottom: "40px", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: "-60px", right: "-60px", width: "220px", height: "220px", borderRadius: "50%", background: "rgba(255,255,255,0.04)" }} />
           <div style={{ position: "relative" }}>
-            <span
-              style={{
-                fontSize: "0.7rem",
-                fontWeight: 600,
-                color: "rgba(255,255,255,0.45)",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                display: "block",
-                marginBottom: "12px",
-              }}
-            >
-              NCLEX-RN · бэлтгэл
-            </span>
-            <h1
-              style={{
-                fontFamily: "'Lora', Georgia, serif",
-                fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
-                fontWeight: 600,
-                color: "#fff",
-                margin: "0 0 10px",
-                lineHeight: 1.25,
-                letterSpacing: "-0.01em",
-              }}
-            >
+            <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "rgba(255,255,255,0.45)", letterSpacing: "0.12em", textTransform: "uppercase", display: "block", marginBottom: "12px" }}>NCLEX-RN · бэлтгэл</span>
+            <h1 style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 600, color: "#fff", margin: "0 0 10px", lineHeight: 1.25, letterSpacing: "-0.01em" }}>
               Тавтай морилно уу, {user?.name}
             </h1>
-            <p
-              style={{
-                fontSize: "0.9rem",
-                color: "rgba(255,255,255,0.55)",
-                margin: 0,
-                maxWidth: "480px",
-                lineHeight: 1.7,
-              }}
-            >
+            <p style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.55)", margin: 0, maxWidth: "480px", lineHeight: 1.7 }}>
               Хичээл үзэх, шалгалт өгөх, ахиц дэвшлээ хянах — бүгд нэг дор.
             </p>
           </div>
         </div>
 
         {/* Tabs */}
-        <div
-          style={{
-            display: "flex",
-            gap: "4px",
-            background: "#eef3f5",
-            borderRadius: "12px",
-            padding: "4px",
-            width: "fit-content",
-            marginBottom: "32px",
-          }}
-        >
+        <div style={{ display: "flex", gap: "4px", background: "#eef3f5", borderRadius: "12px", padding: "4px", width: "fit-content", marginBottom: "32px" }}>
           {tabs.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              className="tab-btn"
-              onClick={() => {
-                setActiveTab(id);
-                setSelectedCourse(null);
-              }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "7px",
-                padding: "9px 20px",
-                borderRadius: "9px",
-                fontSize: "0.84rem",
-                fontWeight: 600,
-                color: activeTab === id ? "#0d2b33" : "#7a9ea7",
-                background: activeTab === id ? "#fff" : "transparent",
-                boxShadow:
-                  activeTab === id ? "0 1px 6px rgba(14,116,144,0.08)" : "none",
-              }}
+            <button key={id} className="tab-btn"
+              onClick={() => { setActiveTab(id); setSelectedCourse(null); setCourseLoading(false); }}
+              style={{ display: "flex", alignItems: "center", gap: "7px", padding: "9px 20px", borderRadius: "9px", fontSize: "0.84rem", fontWeight: 600, color: activeTab === id ? "#0d2b33" : "#7a9ea7", background: activeTab === id ? "#fff" : "transparent", boxShadow: activeTab === id ? "0 1px 6px rgba(14,116,144,0.08)" : "none" }}
             >
-              <Icon size={15} />
-              {label}
+              <Icon size={15} />{label}
             </button>
           ))}
         </div>
 
         {/* Courses Tab */}
-        {activeTab === "courses" &&
-          (selectedCourse ? (
-            <CourseViewer
-              course={selectedCourse}
-              onBack={() => setSelectedCourse(null)}
-            />
+        {activeTab === "courses" && (
+          courseLoading ? (
+            // ── Skeleton loader ──
+            <div className="course-loader-enter" style={{ position: "relative" }}>
+              <div style={{ background: "#fff", border: "1px solid #dce9ec", borderRadius: "20px", overflow: "hidden", minHeight: "460px" }}>
+                {/* Image skeleton */}
+                <div className="shimmer" style={{ height: "220px", borderRadius: 0 }} />
+                <div style={{ padding: "28px 32px" }}>
+                  {/* Back button skeleton */}
+                  <div className="shimmer" style={{ width: "90px", height: "18px", marginBottom: "32px" }} />
+                  {/* Title skeletons */}
+                  <div className="shimmer" style={{ width: "55%", height: "26px", marginBottom: "12px" }} />
+                  <div className="shimmer" style={{ width: "35%", height: "18px", marginBottom: "28px" }} />
+                  {/* Language toggle skeleton */}
+                  <div style={{ display: "flex", gap: "10px", marginBottom: "24px" }}>
+                    <div className="shimmer" style={{ width: "110px", height: "38px", borderRadius: "10px" }} />
+                    <div className="shimmer" style={{ width: "110px", height: "38px", borderRadius: "10px" }} />
+                  </div>
+                  {/* PDF area skeleton */}
+                  <div className="shimmer" style={{ width: "100%", height: "300px", borderRadius: "12px" }} />
+                </div>
+              </div>
+
+              {/* Centered spinner + label overlay */}
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
+                <div style={{
+                  background: "rgba(255,255,255,0.94)",
+                  backdropFilter: "blur(10px)",
+                  borderRadius: "18px",
+                  padding: "28px 36px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "16px",
+                  boxShadow: "0 12px 48px rgba(14,116,144,0.14)",
+                  border: "1px solid rgba(14,116,144,0.1)",
+                }}>
+                  <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "3px solid #e0eef2", borderTopColor: "#0e7490", animation: "spin 0.8s linear infinite" }} />
+                  <div style={{ textAlign: "center" }}>
+                    <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "1rem", fontWeight: 600, color: "#0d2b33", margin: "0 0 5px" }}>
+                      {courses.find(c => c.id === loadingCourseId)?.title}
+                    </p>
+                    <p style={{ fontSize: "0.78rem", color: "#8aacb4", margin: 0 }}>Хичээл ачаалж байна...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : selectedCourse ? (
+            <CourseViewer course={selectedCourse} onBack={handleBackFromCourse} />
           ) : (
             <div>
               <div style={{ marginBottom: "24px" }}>
-                <h2
-                  style={{
-                    fontFamily: "'Lora', Georgia, serif",
-                    fontSize: "1.4rem",
-                    fontWeight: 600,
-                    color: "#0d2b33",
-                    margin: "0 0 6px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                  }}
-                >
-                  <GraduationCap size={20} color="#0e7490" /> Сургалтын
-                  хичээлүүд
+                <h2 style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "1.4rem", fontWeight: 600, color: "#0d2b33", margin: "0 0 6px", display: "flex", alignItems: "center", gap: "10px" }}>
+                  <GraduationCap size={20} color="#0e7490" /> Сургалтын хичээлүүд
                 </h2>
-                <p style={{ fontSize: "0.85rem", color: "#7a9ea7", margin: 0 }}>
-                  Монгол болон англи хэлээр боломжтой.
-                </p>
+                <p style={{ fontSize: "0.85rem", color: "#7a9ea7", margin: 0 }}>Монгол болон англи хэлээр боломжтой.</p>
               </div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, 1fr)",
-                  gap: "20px",
-                }}
-              >
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "20px" }}>
                 {courses.map((course, i) => (
                   <button
                     key={course.id}
                     className="course-card"
                     onMouseEnter={() => setHoveredCard(i)}
                     onMouseLeave={() => setHoveredCard(null)}
-                    onClick={() => setSelectedCourse(course)}
-                    style={{
-                      borderRadius: "16px",
-                      overflow: "hidden",
-                      border: "1px solid #dce9ec",
-                    }}
+                    onClick={() => handleSelectCourse(course)}
+                    disabled={courseLoading}
+                    style={{ borderRadius: "16px", overflow: "hidden", border: "1px solid #dce9ec", position: "relative" }}
                   >
-                    <div
-                      style={{
-                        aspectRatio: "16/8",
-                        overflow: "hidden",
-                        position: "relative",
-                        background: "#e0eef2",
-                      }}
-                    >
-                      <img
-                        src={course.image}
-                        alt={course.title}
-                        className="course-img"
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          display: "block",
-                        }}
-                      />
-                      <div
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          background:
-                            "linear-gradient(to top, rgba(13,43,51,0.55) 0%, transparent 55%)",
-                        }}
-                      />
-                      <span
-                        style={{
-                          position: "absolute",
-                          top: "12px",
-                          right: "12px",
-                          background: "#0e7490",
-                          color: "#fff",
-                          fontSize: "0.68rem",
-                          fontWeight: 700,
-                          letterSpacing: "0.08em",
-                          textTransform: "uppercase",
-                          padding: "3px 10px",
-                          borderRadius: "99px",
-                        }}
-                      >
-                        МН · EN
-                      </span>
-                      <p
-                        style={{
-                          position: "absolute",
-                          bottom: "12px",
-                          left: "16px",
-                          right: "16px",
-                          margin: 0,
-                          fontFamily: "'Lora', Georgia, serif",
-                          fontSize: "1rem",
-                          fontWeight: 600,
-                          color: "#fff",
-                          lineHeight: 1.3,
-                        }}
-                      >
-                        {course.title}
-                      </p>
+                    {/* Card-level spinner for the clicked card */}
+                    {loadingCourseId === course.id && (
+                      <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "rgba(248,250,251,0.7)", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "16px" }}>
+                        <div style={{ width: "28px", height: "28px", borderRadius: "50%", border: "3px solid #dce9ec", borderTopColor: "#0e7490", animation: "spin 0.8s linear infinite" }} />
+                      </div>
+                    )}
+                    <div style={{ aspectRatio: "16/8", overflow: "hidden", position: "relative", background: "#e0eef2" }}>
+                      <img src={course.image} alt={course.title} className="course-img" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(13,43,51,0.55) 0%, transparent 55%)" }} />
+                      <span style={{ position: "absolute", top: "12px", right: "12px", background: "#0e7490", color: "#fff", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", padding: "3px 10px", borderRadius: "99px" }}>МН · EN</span>
+                      <p style={{ position: "absolute", bottom: "12px", left: "16px", right: "16px", margin: 0, fontFamily: "'Lora', Georgia, serif", fontSize: "1rem", fontWeight: 600, color: "#fff", lineHeight: 1.3 }}>{course.title}</p>
                     </div>
                     <div style={{ padding: "18px 20px" }}>
-                      <p
-                        style={{
-                          fontSize: "0.82rem",
-                          color: "#7a9ea7",
-                          margin: "0 0 14px",
-                          lineHeight: 1.65,
-                        }}
-                      >
-                        {course.description}
-                      </p>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <span
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "5px",
-                            fontSize: "0.77rem",
-                            color: "#8aacb4",
-                          }}
-                        >
+                      <p style={{ fontSize: "0.82rem", color: "#7a9ea7", margin: "0 0 14px", lineHeight: 1.65 }}>{course.description}</p>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "0.77rem", color: "#8aacb4" }}>
                           <BookOpen size={13} /> Part {course.lessons}
                         </span>
-                        <ArrowRight
-                          size={16}
-                          color={hoveredCard === i ? "#0e7490" : "#b0c8cf"}
-                          style={{
-                            transition: "transform 0.2s, color 0.2s",
-                            transform:
-                              hoveredCard === i ? "translateX(3px)" : "none",
-                          }}
-                        />
+                        <ArrowRight size={16} color={hoveredCard === i ? "#0e7490" : "#b0c8cf"} style={{ transition: "transform 0.2s, color 0.2s", transform: hoveredCard === i ? "translateX(3px)" : "none" }} />
                       </div>
                     </div>
                   </button>
                 ))}
               </div>
             </div>
-          ))}
+          )
+        )}
 
         {/* Quiz Tab */}
-        {activeTab === "quizzes" &&
-          (quizLang ? (
+        {activeTab === "quizzes" && (
+          quizLang ? (
             <Quiz lang={quizLang} onExit={() => setQuizLang(null)} />
           ) : (
             <div>
               <div style={{ marginBottom: "24px" }}>
-                <h2
-                  style={{
-                    fontFamily: "'Lora', Georgia, serif",
-                    fontSize: "1.4rem",
-                    fontWeight: 600,
-                    color: "#0d2b33",
-                    margin: "0 0 6px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                  }}
-                >
+                <h2 style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "1.4rem", fontWeight: 600, color: "#0d2b33", margin: "0 0 6px", display: "flex", alignItems: "center", gap: "10px" }}>
                   <ClipboardCheck size={20} color="#0e7490" /> Шалгалт өгөх
                 </h2>
-                <p style={{ fontSize: "0.85rem", color: "#7a9ea7", margin: 0 }}>
-                  Мэдлэгээ шалгаарай. Асуулт бүр англи болон монгол хэлээр
-                  харагдана.
-                </p>
+                <p style={{ fontSize: "0.85rem", color: "#7a9ea7", margin: 0 }}>Мэдлэгээ шалгаарай. Асуулт бүр англи болон монгол хэлээр харагдана.</p>
               </div>
-              <div
-                style={{
-                  background: "#fff",
-                  border: "1px solid #dce9ec",
-                  borderRadius: "16px",
-                  padding: "40px 32px",
-                  textAlign: "center",
-                }}
-              >
-                <div
-                  style={{
-                    width: "56px",
-                    height: "56px",
-                    borderRadius: "14px",
-                    background: "rgba(14,116,144,0.08)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    margin: "0 auto 20px",
-                  }}
-                >
+              <div style={{ background: "#fff", border: "1px solid #dce9ec", borderRadius: "16px", padding: "40px 32px", textAlign: "center" }}>
+                <div style={{ width: "56px", height: "56px", borderRadius: "14px", background: "rgba(14,116,144,0.08)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
                   <ClipboardCheck size={26} color="#0e7490" />
                 </div>
-                <h3
-                  style={{
-                    fontFamily: "'Lora', Georgia, serif",
-                    fontSize: "1.3rem",
-                    fontWeight: 600,
-                    color: "#0d2b33",
-                    margin: "0 0 10px",
-                  }}
-                >
-                  NCLEX-RN Шалгалт
-                </h3>
-                <p
-                  style={{
-                    fontSize: "0.85rem",
-                    color: "#7a9ea7",
-                    margin: "0 0 24px",
-                    maxWidth: "400px",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    lineHeight: 1.7,
-                  }}
-                >
-                  Санамсаргүй 10 асуулт. Асуулт бүр англи болон монгол хэлбэрээр
-                  гарна. Тэнцэхэд 70% шаардлагатай.
+                <h3 style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "1.3rem", fontWeight: 600, color: "#0d2b33", margin: "0 0 10px" }}>NCLEX-RN Шалгалт</h3>
+                <p style={{ fontSize: "0.85rem", color: "#7a9ea7", margin: "0 0 24px", maxWidth: "400px", marginLeft: "auto", marginRight: "auto", lineHeight: 1.7 }}>
+                  Санамсаргүй 10 асуулт. Асуулт бүр англи болон монгол хэлбэрээр гарна. Тэнцэхэд 70% шаардлагатай.
                 </p>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "24px",
-                    marginBottom: "32px",
-                  }}
-                >
+                <div style={{ display: "flex", justifyContent: "center", gap: "24px", marginBottom: "32px" }}>
                   {["10 асуулт", "70% тэнцэх", "Тайлбартай"].map((item) => (
-                    <div
-                      key={item}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        fontSize: "0.82rem",
-                        color: "#517882",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "5px",
-                          height: "5px",
-                          borderRadius: "50%",
-                          background: "#0e7490",
-                        }}
-                      />
+                    <div key={item} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.82rem", color: "#517882" }}>
+                      <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#0e7490" }} />
                       {item}
                     </div>
                   ))}
                 </div>
                 <button
                   onClick={() => setQuizLang("mn")}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    background: "#0e7490",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "10px",
-                    padding: "13px 40px",
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "0.95rem",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "#0c6783")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.background = "#0e7490")
-                  }
+                  style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "#0e7490", color: "#fff", border: "none", borderRadius: "10px", padding: "13px 40px", fontFamily: "'DM Sans', sans-serif", fontSize: "0.95rem", fontWeight: 600, cursor: "pointer" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "#0c6783")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "#0e7490")}
                 >
                   Шалгалт эхлүүлэх <ArrowRight size={16} />
                 </button>
               </div>
             </div>
-          ))}
+          )
+        )}
 
         {/* Admin Tab */}
         {activeTab === "admin" && user?.role === "admin" && <AdminPanel />}
