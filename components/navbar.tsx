@@ -152,12 +152,12 @@ export default function Navbar({ onLoginClick }: NavbarProps) {
       }}>
         <div style={{
           maxWidth: "1080px", margin: "0 auto", padding: "0 32px",
-          height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between",
+          height: "72px", display: "flex", alignItems: "center", justifyContent: "space-between",
         }}>
 
           {/* Logo */}
           <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "9px" }}>
-            <img src="/images/logo.png" alt="Logo" style={{ width: "96px", height: "64px" }} />
+            <img src="/images/logos.png" alt="Logo" style={{ width: "72px", height: "48px" }} />
           </a>
 
           {/* Desktop nav */}

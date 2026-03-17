@@ -172,7 +172,7 @@ export default function HeroSection({ onLoginClick }: { onLoginClick: () => void
             <div style={{ ...fade(0), marginBottom: "28px" }}>
               <span style={{ display: "inline-flex", alignItems: "center", gap: "9px", background: "rgba(14,116,144,0.07)", border: "1px solid rgba(14,116,144,0.18)", borderRadius: "99px", padding: "6px 16px 6px 8px", fontSize: "0.73rem", fontWeight: 600, color: "#0e7490", letterSpacing: "0.04em" }}>
                 <span style={{ background: "linear-gradient(135deg, #0e7490, #22b8d1)", color: "#fff", borderRadius: "99px", padding: "2px 10px", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.09em" }}>ШИНЭ</span>
-                NCLEX-RN · 2026 бэлтгэл
+                NCLEX-RN ·  бэлтгэл
               </span>
             </div>
 

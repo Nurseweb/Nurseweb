@@ -11,7 +11,7 @@ export default function Footer() {
           aria-label="MediConnect Home"
         >
           <img
-            src="/images/logo.png"
+            src="/images/logos.png"
             alt="MediConnect Logo"
             className="w-24 h-16"
           />

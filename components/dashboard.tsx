@@ -1193,7 +1193,7 @@ export default function Dashboard({
                 marginBottom: "12px",
               }}
             >
-              NCLEX-RN · 2026 бэлтгэл
+              NCLEX-RN · бэлтгэл
             </span>
             <h1
               style={{
