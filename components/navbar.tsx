@@ -1,54 +1,67 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Menu, X, LogOut, ChevronDown } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react";
+import { Menu, X, LogOut, ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface NavbarProps {
-  onLoginClick: () => void
+  onLoginClick: () => void;
 }
 
 interface CurrentUser {
-  id: string
-  email: string
-  name: string
-  role: string
+  id: string;
+  email: string;
+  name: string;
+  role: string;
 }
 
 export default function Navbar({ onLoginClick }: NavbarProps) {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [user, setUser] = useState<CurrentUser | null>(null)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const router = useRouter()
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState<CurrentUser | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const router = useRouter();
 
   // LocalStorage-оос user уншина
   useEffect(() => {
-    const stored = localStorage.getItem("user")
+    const stored = localStorage.getItem("user");
     if (stored) {
-      try { setUser(JSON.parse(stored)) } catch { localStorage.removeItem("user") }
+      try {
+        setUser(JSON.parse(stored));
+      } catch {
+        localStorage.removeItem("user");
+      }
     }
 
     // Login болмогц update хийх
     const handleStorage = () => {
-      const updated = localStorage.getItem("user")
-      setUser(updated ? JSON.parse(updated) : null)
-    }
-    window.addEventListener("storage", handleStorage)
-    window.addEventListener("auth-change", handleStorage)
+      const updated = localStorage.getItem("user");
+      if (updated) {
+        try {
+          const parsed = JSON.parse(updated);
+          if (parsed?.name) setUser(parsed);
+        } catch {
+          localStorage.removeItem("user");
+        }
+      } else {
+        setUser(null);
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener("auth-change", handleStorage);
     return () => {
-      window.removeEventListener("storage", handleStorage)
-      window.removeEventListener("auth-change", handleStorage)
-    }
-  }, [])
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("auth-change", handleStorage);
+    };
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
-    setUser(null)
-    setDropdownOpen(false)
-    router.push("/")
-    window.dispatchEvent(new Event("auth-change"))
-  }
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    setDropdownOpen(false);
+    router.push("/");
+    window.dispatchEvent(new Event("auth-change"));
+  };
 
   return (
     <>
@@ -144,31 +157,70 @@ export default function Navbar({ onLoginClick }: NavbarProps) {
         }
       `}</style>
 
-      <header style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
-        background: "rgba(248,250,251,0.88)",
-        backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)",
-        borderBottom: "1px solid #e4eef1",
-      }}>
-        <div style={{
-          maxWidth: "1080px", margin: "0 auto", padding: "0 32px",
-          height: "72px", display: "flex", alignItems: "center", justifyContent: "space-between",
-        }}>
-
+      <header
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          background: "rgba(248,250,251,0.88)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+          borderBottom: "1px solid #e4eef1",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "1080px",
+            margin: "0 auto",
+            padding: "0 32px",
+            height: "72px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           {/* Logo */}
-          <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "9px" }}>
-            <img src="/images/logos.png" alt="Logo" style={{ width: "72px", height: "48px" }} />
+          <a
+            href="/"
+            style={{
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "9px",
+            }}
+          >
+            <img
+              src="/images/logos.png"
+              alt="Logo"
+              style={{ width: "72px", height: "48px" }}
+            />
           </a>
 
           {/* Desktop nav */}
-          <nav className="desktop-nav" style={{ display: "flex", alignItems: "center", gap: "32px" }}>
-            <a href="#about" className="nav-link">Бидний тухай</a>
-            <a href="#features" className="nav-link">Агуулга</a>
-            <a href="https://www.facebook.com/profile.php?id=61583464740599" className="nav-link" target="_blank" rel="noopener noreferrer">
+          <nav
+            className="desktop-nav"
+            style={{ display: "flex", alignItems: "center", gap: "32px" }}
+          >
+            <a href="#about" className="nav-link">
+              Бидний тухай
+            </a>
+            <a href="#features" className="nav-link">
+              Агуулга
+            </a>
+            <a
+              href="https://www.facebook.com/profile.php?id=61583464740599"
+              className="nav-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Холбоо барих
             </a>
 
-            <div style={{ width: "1px", height: "18px", background: "#dce9ec" }} />
+            <div
+              style={{ width: "1px", height: "18px", background: "#dce9ec" }}
+            />
 
             {user ? (
               /* ── Logged in ── */
@@ -178,14 +230,30 @@ export default function Navbar({ onLoginClick }: NavbarProps) {
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                 >
                   <div className="user-avatar">
-                    {user.name.charAt(0).toUpperCase()}
+                    {user?.name?.charAt(0)?.toUpperCase() ?? "U"}
                   </div>
                   <div style={{ textAlign: "left" }}>
-                    <p style={{ fontSize: "0.8rem", fontWeight: 600, color: "#0d2b33", margin: 0, lineHeight: 1.2 }}>
+                    <p
+                      style={{
+                        fontSize: "0.8rem",
+                        fontWeight: 600,
+                        color: "#0d2b33",
+                        margin: 0,
+                        lineHeight: 1.2,
+                      }}
+                    >
                       {user.name}
                     </p>
                     {user.role === "admin" && (
-                      <p style={{ fontSize: "0.65rem", color: "#0e7490", margin: 0, fontWeight: 600, letterSpacing: "0.05em" }}>
+                      <p
+                        style={{
+                          fontSize: "0.65rem",
+                          color: "#0e7490",
+                          margin: 0,
+                          fontWeight: 600,
+                          letterSpacing: "0.05em",
+                        }}
+                      >
                         ADMIN
                       </p>
                     )}
@@ -193,7 +261,10 @@ export default function Navbar({ onLoginClick }: NavbarProps) {
                   <ChevronDown
                     size={14}
                     color="#8aacb4"
-                    style={{ transition: "transform 0.2s", transform: dropdownOpen ? "rotate(180deg)" : "none" }}
+                    style={{
+                      transition: "transform 0.2s",
+                      transform: dropdownOpen ? "rotate(180deg)" : "none",
+                    }}
                   />
                 </button>
 
@@ -206,28 +277,86 @@ export default function Navbar({ onLoginClick }: NavbarProps) {
                     />
                     <div className="dropdown">
                       {/* User info */}
-                      <div style={{ padding: "12px 16px 10px", borderBottom: "1px solid #e8f0f2" }}>
-                        <p style={{ fontSize: "0.82rem", fontWeight: 600, color: "#0d2b33", margin: "0 0 2px" }}>
+                      <div
+                        style={{
+                          padding: "12px 16px 10px",
+                          borderBottom: "1px solid #e8f0f2",
+                        }}
+                      >
+                        <p
+                          style={{
+                            fontSize: "0.82rem",
+                            fontWeight: 600,
+                            color: "#0d2b33",
+                            margin: "0 0 2px",
+                          }}
+                        >
                           {user.name}
                         </p>
-                        <p style={{ fontSize: "0.72rem", color: "#8aacb4", margin: 0 }}>
+                        <p
+                          style={{
+                            fontSize: "0.72rem",
+                            color: "#8aacb4",
+                            margin: 0,
+                          }}
+                        >
                           {user.email}
                         </p>
                       </div>
 
                       {/* Dashboard link */}
                       <a href="/dashboard" className="dropdown-item">
-                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-                          <rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="#8aacb4" strokeWidth="1.4"/>
-                          <rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="#8aacb4" strokeWidth="1.4"/>
-                          <rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="#8aacb4" strokeWidth="1.4"/>
-                          <rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="#8aacb4" strokeWidth="1.4"/>
+                        <svg
+                          width="15"
+                          height="15"
+                          viewBox="0 0 15 15"
+                          fill="none"
+                        >
+                          <rect
+                            x="1"
+                            y="1"
+                            width="5.5"
+                            height="5.5"
+                            rx="1"
+                            stroke="#8aacb4"
+                            strokeWidth="1.4"
+                          />
+                          <rect
+                            x="8.5"
+                            y="1"
+                            width="5.5"
+                            height="5.5"
+                            rx="1"
+                            stroke="#8aacb4"
+                            strokeWidth="1.4"
+                          />
+                          <rect
+                            x="1"
+                            y="8.5"
+                            width="5.5"
+                            height="5.5"
+                            rx="1"
+                            stroke="#8aacb4"
+                            strokeWidth="1.4"
+                          />
+                          <rect
+                            x="8.5"
+                            y="8.5"
+                            width="5.5"
+                            height="5.5"
+                            rx="1"
+                            stroke="#8aacb4"
+                            strokeWidth="1.4"
+                          />
                         </svg>
                         Хянах самбар
                       </a>
 
                       {/* Logout */}
-                      <button className="dropdown-item danger" onClick={handleLogout}>
+                      <button
+                        className="dropdown-item danger"
+                        onClick={handleLogout}
+                      >
                         <LogOut size={14} color="#b91c1c" />
                         Гарах
                       </button>
@@ -256,27 +385,86 @@ export default function Navbar({ onLoginClick }: NavbarProps) {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="mobile-menu-anim" style={{
-            background: "#fff", borderTop: "1px solid #e4eef1",
-            padding: "16px 32px 24px",
-          }}>
-            <a href="#about" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Бидний тухай</a>
-            <a href="#features" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Агуулга</a>
-            <a href="#contact" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Холбоо барих</a>
+          <div
+            className="mobile-menu-anim"
+            style={{
+              background: "#fff",
+              borderTop: "1px solid #e4eef1",
+              padding: "16px 32px 24px",
+            }}
+          >
+            <a
+              href="#about"
+              className="mobile-nav-link"
+              onClick={() => setMenuOpen(false)}
+            >
+              Бидний тухай
+            </a>
+            <a
+              href="#features"
+              className="mobile-nav-link"
+              onClick={() => setMenuOpen(false)}
+            >
+              Агуулга
+            </a>
+            <a
+              href="#contact"
+              className="mobile-nav-link"
+              onClick={() => setMenuOpen(false)}
+            >
+              Холбоо барих
+            </a>
 
             {user ? (
-              <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                <div style={{ padding: "10px 0", borderBottom: "1px solid #e8f0f2" }}>
-                  <p style={{ fontSize: "0.85rem", fontWeight: 600, color: "#0d2b33", margin: "0 0 2px" }}>{user.name}</p>
-                  <p style={{ fontSize: "0.75rem", color: "#8aacb4", margin: 0 }}>{user.email}</p>
+              <div
+                style={{
+                  marginTop: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "10px 0",
+                    borderBottom: "1px solid #e8f0f2",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: "0.85rem",
+                      fontWeight: 600,
+                      color: "#0d2b33",
+                      margin: "0 0 2px",
+                    }}
+                  >
+                    {user.name}
+                  </p>
+                  <p
+                    style={{ fontSize: "0.75rem", color: "#8aacb4", margin: 0 }}
+                  >
+                    {user.email}
+                  </p>
                 </div>
-                <a href="/dashboard" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
+                <a
+                  href="/dashboard"
+                  className="mobile-nav-link"
+                  onClick={() => setMenuOpen(false)}
+                >
                   Хянах самбар
                 </a>
                 <button
                   className="nav-cta"
-                  style={{ marginTop: "8px", width: "100%", padding: "12px", background: "#b91c1c" }}
-                  onClick={() => { handleLogout(); setMenuOpen(false) }}
+                  style={{
+                    marginTop: "8px",
+                    width: "100%",
+                    padding: "12px",
+                    background: "#b91c1c",
+                  }}
+                  onClick={() => {
+                    handleLogout();
+                    setMenuOpen(false);
+                  }}
                 >
                   Гарах
                 </button>
@@ -285,7 +473,10 @@ export default function Navbar({ onLoginClick }: NavbarProps) {
               <button
                 className="nav-cta"
                 style={{ marginTop: "16px", width: "100%", padding: "12px" }}
-                onClick={() => { onLoginClick(); setMenuOpen(false) }}
+                onClick={() => {
+                  onLoginClick();
+                  setMenuOpen(false);
+                }}
               >
                 Нэвтрэх
               </button>
@@ -294,5 +485,5 @@ export default function Navbar({ onLoginClick }: NavbarProps) {
         )}
       </header>
     </>
-  )
+  );
 }
