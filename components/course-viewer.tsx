@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useCallback } from "react"
-import { ArrowLeft, Globe, BookOpen, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react"
+import { ArrowLeft, Globe, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, BookOpen } from "lucide-react"
 
 interface CourseViewerProps {
   course: {
@@ -22,29 +22,28 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
   const [lang, setLang] = useState<"mn" | "en">("mn")
   const [pdfDoc, setPdfDoc] = useState<any>(null)
   const [totalPages, setTotalPages] = useState(0)
-  const [scale, setScale] = useState(1.3)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [isMobile, setIsMobile] = useState(false)
 
-  // Desktop: single page view
+  // Desktop
   const [currentPage, setCurrentPage] = useState(1)
+  const [scale, setScale] = useState(1.3)
   const [inputPage, setInputPage] = useState("1")
   const [thumbnails, setThumbnails] = useState<string[]>([])
   const mainCanvasRef = useRef<HTMLCanvasElement>(null)
   const thumbsRef = useRef<HTMLDivElement>(null)
   const renderTaskRef = useRef<any>(null)
 
-  // Mobile: all pages rendered
-  const mobileCanvasRefs = useRef<(HTMLCanvasElement | null)[]>([])
-  const mobileRenderDoneRef = useRef<boolean[]>([])
+  // Mobile: one page at a time
+  const [mobilePage, setMobilePage] = useState(1)
+  const mobileCanvasRef = useRef<HTMLCanvasElement>(null)
+  const mobileRenderRef = useRef<any>(null)
 
   const pdfJsLoadedRef = useRef(false)
-
   const pdfUrl = lang === "mn" ? course.pdfMn : course.pdfEn
   const hasBothLangs = course.pdfEn && course.pdfMn
 
-  // Detect mobile
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
     check()
@@ -52,12 +51,9 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
     return () => window.removeEventListener("resize", check)
   }, [])
 
-  // Load pdf.js
   const loadPdfJs = useCallback((): Promise<any> => {
     return new Promise((resolve, reject) => {
-      if (pdfJsLoadedRef.current && (window as any).pdfjsLib) {
-        resolve((window as any).pdfjsLib); return
-      }
+      if (pdfJsLoadedRef.current && (window as any).pdfjsLib) { resolve((window as any).pdfjsLib); return }
       const existing = document.querySelector('script[data-pdfjs]')
       if (existing) {
         const lib = (window as any).pdfjsLib
@@ -70,28 +66,21 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
       script.setAttribute('data-pdfjs', '1')
       script.onload = () => {
         const lib = (window as any).pdfjsLib
-        lib.GlobalWorkerOptions.workerSrc =
-          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
+        lib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
         pdfJsLoadedRef.current = true
         resolve(lib)
       }
-      script.onerror = () => reject(new Error("pdf.js ачааллаж чадсангүй"))
+      script.onerror = () => reject(new Error("PDF library ачааллаж чадсангүй"))
       document.head.appendChild(script)
     })
   }, [])
 
-  // Load PDF
   useEffect(() => {
     if (!pdfUrl) return
     let cancelled = false
-    setLoading(true)
-    setError("")
-    setPdfDoc(null)
-    setThumbnails([])
-    setCurrentPage(1)
-    setInputPage("1")
-    setTotalPages(0)
-    mobileRenderDoneRef.current = []
+    setLoading(true); setError(""); setPdfDoc(null)
+    setThumbnails([]); setCurrentPage(1); setInputPage("1")
+    setTotalPages(0); setMobilePage(1)
 
     const load = async () => {
       try {
@@ -101,7 +90,6 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
         if (cancelled) return
         setPdfDoc(doc)
         setTotalPages(doc.numPages)
-        mobileRenderDoneRef.current = new Array(doc.numPages).fill(false)
         setLoading(false)
 
         // Desktop thumbnails
@@ -125,7 +113,7 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
   }, [pdfUrl, loadPdfJs])
 
   // Desktop: render single page
-  const renderPage = useCallback(async () => {
+  const renderDesktop = useCallback(async () => {
     if (!pdfDoc || !mainCanvasRef.current || isMobile) return
     if (renderTaskRef.current) { try { renderTaskRef.current.cancel() } catch {} }
     try {
@@ -133,45 +121,44 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
       const viewport = page.getViewport({ scale })
       const canvas = mainCanvasRef.current
       if (!canvas) return
-      canvas.width = viewport.width
-      canvas.height = viewport.height
+      canvas.width = viewport.width; canvas.height = viewport.height
       const task = page.render({ canvasContext: canvas.getContext("2d")!, viewport })
       renderTaskRef.current = task
       await task.promise
-    } catch (e: any) {
-      if (e?.name !== "RenderingCancelledException") console.error(e)
-    }
+    } catch (e: any) { if (e?.name !== "RenderingCancelledException") console.error(e) }
   }, [pdfDoc, currentPage, scale, isMobile])
 
-  useEffect(() => { if (!isMobile) renderPage() }, [renderPage, isMobile])
+  useEffect(() => { if (!isMobile) renderDesktop() }, [renderDesktop, isMobile])
 
-  // Mobile: render all pages sequentially
-  useEffect(() => {
-    if (!pdfDoc || !isMobile || totalPages === 0) return
-    let cancelled = false
+  // Mobile: render current page at HIGH quality (2x device pixel ratio)
+  const renderMobile = useCallback(async () => {
+    if (!pdfDoc || !mobileCanvasRef.current || !isMobile) return
+    if (mobileRenderRef.current) { try { mobileRenderRef.current.cancel() } catch {} }
+    try {
+      const page = await pdfDoc.getPage(mobilePage)
+      const dpr = window.devicePixelRatio || 2
+      const containerWidth = window.innerWidth - 32 // padding
+      const baseViewport = page.getViewport({ scale: 1 })
+      const fitScale = containerWidth / baseViewport.width
+      // Render at 2x for sharpness
+      const renderScale = fitScale * dpr
+      const viewport = page.getViewport({ scale: renderScale })
+      const canvas = mobileCanvasRef.current
+      if (!canvas) return
+      canvas.width = viewport.width
+      canvas.height = viewport.height
+      // CSS size = container width (device pixels handled by dpr)
+      canvas.style.width = `${containerWidth}px`
+      canvas.style.height = `${viewport.height / dpr}px`
+      const task = page.render({ canvasContext: canvas.getContext("2d")!, viewport })
+      mobileRenderRef.current = task
+      await task.promise
+    } catch (e: any) { if (e?.name !== "RenderingCancelledException") console.error(e) }
+  }, [pdfDoc, mobilePage, isMobile])
 
-    const renderAll = async () => {
-      for (let i = 1; i <= totalPages; i++) {
-        if (cancelled) break
-        if (mobileRenderDoneRef.current[i - 1]) continue
-        const canvas = mobileCanvasRefs.current[i - 1]
-        if (!canvas) continue
-        try {
-          const page = await pdfDoc.getPage(i)
-          const mobileScale = (window.innerWidth - 32) / (page.getViewport({ scale: 1 }).width)
-          const viewport = page.getViewport({ scale: Math.min(mobileScale, 2) })
-          canvas.width = viewport.width
-          canvas.height = viewport.height
-          await page.render({ canvasContext: canvas.getContext("2d")!, viewport }).promise
-          if (!cancelled) mobileRenderDoneRef.current[i - 1] = true
-        } catch {}
-      }
-    }
-    renderAll()
-    return () => { cancelled = true }
-  }, [pdfDoc, isMobile, totalPages])
+  useEffect(() => { if (isMobile) renderMobile() }, [renderMobile, isMobile])
 
-  // Desktop scroll thumb
+  // Sync desktop thumb
   useEffect(() => {
     if (isMobile) return
     setInputPage(String(currentPage))
@@ -181,31 +168,43 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
     }
   }, [currentPage, isMobile])
 
-  const goToPage = (p: number) => {
-    const c = Math.max(1, Math.min(p, totalPages || 1))
-    setCurrentPage(c)
-  }
+  const goToPage = (p: number) => setCurrentPage(Math.max(1, Math.min(p, totalPages || 1)))
+  const goMobile = (p: number) => setMobilePage(Math.max(1, Math.min(p, totalPages || 1)))
 
   // ── MOBILE VIEW ──
   if (isMobile) {
     return (
-      <div style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div style={{ fontFamily: "'DM Sans', sans-serif", background: "#f0f4f6", minHeight: "100vh", paddingBottom: "24px" }}>
         <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
 
-        {/* Mobile top bar */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px", gap: "8px" }}>
+        {/* Sticky mobile header */}
+        <div style={{
+          position: "sticky", top: 0, zIndex: 10,
+          background: "rgba(255,255,255,0.97)", backdropFilter: "blur(10px)",
+          borderBottom: "1px solid #dce9ec", padding: "10px 16px",
+          display: "flex", alignItems: "center", gap: "10px",
+        }}>
           <button onClick={onBack}
-            style={{ display: "flex", alignItems: "center", gap: "5px", background: "none", border: "1px solid #dce9ec", borderRadius: "8px", padding: "8px 12px", cursor: "pointer", color: "#517882", fontSize: "0.8rem", fontWeight: 600, flexShrink: 0 }}>
+            style={{ background: "none", border: "1px solid #dce9ec", borderRadius: "8px", padding: "7px 10px", cursor: "pointer", color: "#517882", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.78rem", fontWeight: 600, flexShrink: 0 }}>
             <ArrowLeft size={14} /> Буцах
           </button>
-          <h2 style={{ fontFamily: "'Lora', serif", fontSize: "0.95rem", fontWeight: 600, color: "#0d2b33", margin: 0, flex: 1, textAlign: "center" }}>
-            {course.title}
-          </h2>
+
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontFamily: "'Lora', serif", fontSize: "0.88rem", fontWeight: 600, color: "#0d2b33", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {course.title}
+            </p>
+            {totalPages > 0 && (
+              <p style={{ fontSize: "0.68rem", color: "#8aacb4", margin: 0 }}>
+                {mobilePage} / {totalPages} хуудас
+              </p>
+            )}
+          </div>
+
           {hasBothLangs && (
             <div style={{ display: "flex", background: "#eef3f5", borderRadius: "8px", padding: "2px", flexShrink: 0 }}>
               {(["mn", "en"] as const).map(l => (
                 <button key={l} onClick={() => setLang(l)}
-                  style={{ padding: "5px 10px", borderRadius: "6px", border: "none", fontSize: "0.72rem", fontWeight: 600, cursor: "pointer", background: lang === l ? "#fff" : "transparent", color: lang === l ? "#0d2b33" : "#7a9ea7", transition: "all 0.2s" }}>
+                  style={{ padding: "5px 10px", borderRadius: "6px", border: "none", fontSize: "0.72rem", fontWeight: 700, cursor: "pointer", background: lang === l ? "#0e7490" : "transparent", color: lang === l ? "#fff" : "#7a9ea7", transition: "all 0.2s" }}>
                   {l === "mn" ? "МН" : "EN"}
                 </button>
               ))}
@@ -213,30 +212,88 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
           )}
         </div>
 
-        {/* Mobile: pages stacked vertically */}
-        {loading ? (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "12px", padding: "60px 0" }}>
-            <div style={{ width: "32px", height: "32px", borderRadius: "50%", border: "3px solid #dce9ec", borderTopColor: "#0e7490", animation: "spin 0.8s linear infinite" }} />
-            <p style={{ fontSize: "0.82rem", color: "#517882", margin: 0 }}>PDF ачаалж байна...</p>
-          </div>
-        ) : error ? (
-          <div style={{ textAlign: "center", padding: "40px 0" }}>
-            <p style={{ color: "#b91c1c", fontSize: "0.85rem" }}>{error}</p>
-          </div>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <div key={i} style={{ background: "#fff", borderRadius: "10px", overflow: "hidden", boxShadow: "0 2px 8px rgba(13,43,51,0.08)", border: "1px solid #e8f0f2" }}>
-                {/* Page number badge */}
-                <div style={{ padding: "6px 12px", background: "#f8fafb", borderBottom: "1px solid #e8f0f2", fontSize: "0.68rem", fontWeight: 600, color: "#8aacb4", letterSpacing: "0.05em" }}>
-                  {i + 1} / {totalPages}
+        {/* Canvas area */}
+        <div style={{ padding: "16px 16px 0" }}>
+          {loading ? (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "14px", padding: "80px 0", background: "#fff", borderRadius: "16px" }}>
+              <div style={{ width: "36px", height: "36px", borderRadius: "50%", border: "3px solid #dce9ec", borderTopColor: "#0e7490", animation: "spin 0.8s linear infinite" }} />
+              <p style={{ fontSize: "0.85rem", color: "#517882", margin: 0 }}>PDF ачаалж байна...</p>
+            </div>
+          ) : error ? (
+            <div style={{ textAlign: "center", padding: "60px 0", background: "#fff", borderRadius: "16px" }}>
+              <p style={{ color: "#b91c1c", fontSize: "0.85rem" }}>{error}</p>
+            </div>
+          ) : (
+            <div style={{ background: "#fff", borderRadius: "16px", overflow: "hidden", boxShadow: "0 4px 20px rgba(13,43,51,0.1)" }}>
+              {/* Dark header */}
+              <div style={{ background: "linear-gradient(135deg, #0d2b33 0%, #0e4a5c 100%)", padding: "10px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "7px" }}>
+                  <BookOpen size={13} color="rgba(255,255,255,0.6)" />
+                  <span style={{ fontFamily: "'Lora', serif", fontSize: "0.82rem", fontWeight: 600, color: "#fff" }}>{course.title}</span>
                 </div>
+                <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "rgba(255,255,255,0.55)", letterSpacing: "0.06em" }}>
+                  {lang === "mn" ? "МОНГОЛ" : "ENGLISH"}
+                </span>
+              </div>
+
+              {/* Page canvas — full width, crisp */}
+              <div style={{ background: "#e8eff1", display: "flex", justifyContent: "center", padding: "0" }}>
                 <canvas
-                  ref={el => { mobileCanvasRefs.current[i] = el }}
-                  style={{ width: "100%", display: "block", WebkitUserSelect: "none", userSelect: "none", pointerEvents: "none" }}
+                  ref={mobileCanvasRef}
+                  style={{
+                    display: "block",
+                    WebkitUserSelect: "none",
+                    userSelect: "none",
+                    pointerEvents: "none",
+                    width: "100%",
+                  }}
                 />
               </div>
-            ))}
+            </div>
+          )}
+        </div>
+
+        {/* Bottom navigation — sticky */}
+        {totalPages > 0 && !loading && !error && (
+          <div style={{
+            position: "sticky", bottom: 0,
+            background: "rgba(255,255,255,0.97)", backdropFilter: "blur(10px)",
+            borderTop: "1px solid #dce9ec", padding: "12px 16px",
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            marginTop: "16px", gap: "8px",
+          }}>
+            <button onClick={() => goMobile(mobilePage - 1)} disabled={mobilePage <= 1}
+              style={{
+                flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
+                background: mobilePage <= 1 ? "#f0f6f8" : "#0e7490",
+                color: mobilePage <= 1 ? "#c8dde2" : "#fff",
+                border: "none", borderRadius: "12px", padding: "13px",
+                fontSize: "0.88rem", fontWeight: 600,
+                cursor: mobilePage <= 1 ? "not-allowed" : "pointer",
+                transition: "all 0.2s",
+              }}>
+              <ChevronLeft size={18} /> Өмнөх
+            </button>
+
+            <div style={{ textAlign: "center", flexShrink: 0 }}>
+              <p style={{ fontFamily: "'Lora', serif", fontSize: "1.1rem", fontWeight: 600, color: "#0d2b33", margin: 0, lineHeight: 1 }}>
+                {mobilePage}
+              </p>
+              <p style={{ fontSize: "0.68rem", color: "#8aacb4", margin: "2px 0 0" }}>/ {totalPages}</p>
+            </div>
+
+            <button onClick={() => goMobile(mobilePage + 1)} disabled={mobilePage >= totalPages}
+              style={{
+                flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
+                background: mobilePage >= totalPages ? "#f0f6f8" : "#0e7490",
+                color: mobilePage >= totalPages ? "#c8dde2" : "#fff",
+                border: "none", borderRadius: "12px", padding: "13px",
+                fontSize: "0.88rem", fontWeight: 600,
+                cursor: mobilePage >= totalPages ? "not-allowed" : "pointer",
+                transition: "all 0.2s",
+              }}>
+              Дараах <ChevronRight size={18} />
+            </button>
           </div>
         )}
       </div>
@@ -271,30 +328,25 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          {/* Zoom */}
           <div style={{ display: "flex", alignItems: "center", gap: "2px", background: "#f0f6f8", borderRadius: "9px", padding: "3px 6px" }}>
             <button onClick={() => setScale(s => Math.max(0.5, parseFloat((s - 0.2).toFixed(1))))}
               style={{ background: "none", border: "none", cursor: "pointer", color: "#517882", display: "flex", padding: "4px" }}>
               <ZoomOut size={15} />
             </button>
-            <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#0d2b33", minWidth: "38px", textAlign: "center" }}>
-              {Math.round(scale * 100)}%
-            </span>
+            <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#0d2b33", minWidth: "38px", textAlign: "center" }}>{Math.round(scale * 100)}%</span>
             <button onClick={() => setScale(s => Math.min(3, parseFloat((s + 0.2).toFixed(1))))}
               style={{ background: "none", border: "none", cursor: "pointer", color: "#517882", display: "flex", padding: "4px" }}>
               <ZoomIn size={15} />
             </button>
           </div>
 
-          {/* Page nav */}
           {totalPages > 0 && (
             <div style={{ display: "flex", alignItems: "center", gap: "2px", background: "#f0f6f8", borderRadius: "9px", padding: "3px 6px" }}>
               <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1}
                 style={{ background: "none", border: "none", cursor: currentPage <= 1 ? "not-allowed" : "pointer", color: currentPage <= 1 ? "#c8dde2" : "#0e7490", display: "flex", padding: "4px" }}>
                 <ChevronLeft size={16} />
               </button>
-              <input value={inputPage}
-                onChange={e => setInputPage(e.target.value)}
+              <input value={inputPage} onChange={e => setInputPage(e.target.value)}
                 onBlur={() => goToPage(parseInt(inputPage) || 1)}
                 onKeyDown={e => e.key === "Enter" && goToPage(parseInt(inputPage) || 1)}
                 style={{ width: "34px", textAlign: "center", border: "none", background: "transparent", fontSize: "0.8rem", fontWeight: 600, color: "#0d2b33", outline: "none", fontFamily: "'DM Sans', sans-serif" }} />
@@ -306,7 +358,6 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
             </div>
           )}
 
-          {/* Language toggle */}
           {hasBothLangs && (
             <div style={{ display: "flex", background: "#eef3f5", borderRadius: "10px", padding: "3px" }}>
               {(["mn", "en"] as const).map(l => (
@@ -320,7 +371,6 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
         </div>
       </div>
 
-      {/* Desktop viewer */}
       <div style={{ display: "flex", height: "calc(100vh - 210px)", minHeight: "500px", background: "#fff", border: "1px solid #dce9ec", borderRadius: "16px", overflow: "hidden", boxShadow: "0 2px 16px rgba(14,116,144,0.07)" }}>
         {/* Thumbnails */}
         <div ref={thumbsRef} className="cv-thumb"
@@ -341,7 +391,6 @@ export default function CourseViewer({ course, onBack }: CourseViewerProps) {
               })}
         </div>
 
-        {/* Canvas */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
           <div style={{ background: "linear-gradient(135deg, #0d2b33 0%, #0e4a5c 100%)", padding: "10px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
