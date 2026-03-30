@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Quiz from "./quiz";
 import CourseViewer from "./course-viewer";
+import { useAutoLogout } from "@/hooks/useAutoLogout"
 
 const BASE_PDF = `${process.env.NEXT_PUBLIC_API_URL}/pdfs`;
 
@@ -525,6 +526,7 @@ export default function Dashboard({
   logout,
   onStartQuiz,
 }: DashboardProps) {
+  useAutoLogout()
   const [activeTab, setActiveTab] = useState("courses");
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [quizLang, setQuizLang] = useState<"mn" | "en" | null>(null);
